@@ -1,25 +1,20 @@
 {
   "name": "gradle-docs",
-  "description": "Search current official Gradle documentation with a local lexical index.",
+  "description": "Container for local reference lookup skills.",
   "author": {
     "name": "materkey"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Gradle Docs",
-    "shortDescription": "Lexical search over local current Gradle docs.",
-    "longDescription": "Search a locally built SQLite FTS5 index of the current official Gradle documentation from Codex.",
+    "displayName": "Reference Lookup",
+    "shortDescription": "Local reference lookup skill container.",
+    "longDescription": "Provides installed skills that perform local reference lookup from embedded indexes.",
     "developerName": "materkey",
     "category": "Developer Tools",
     "capabilities": [
-      "Documentation search",
-      "Gradle reference lookup"
-    ],
-    "defaultPrompt": [
-      "Use $gradle to check Gradle configuration cache docs.",
-      "Use $gradle to find Gradle API and DSL references."
+      "Reference lookup",
+      "Skill delivery"
     ],
     "brandColor": "#209BC4"
   }
 }
-

@@ -8,8 +8,8 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 
 - `cmd/crawler` starts at `https://docs.gradle.org/current/userguide/userguide.html`, follows same-host links under `/current/`, extracts page sections from HTML, and builds `cmd/gradle-rag/db/gradle.db`.
 - `cmd/gradle-rag` embeds that database into a single binary and performs lexical FTS5 search.
-- `gradle-docs/skills/gradle/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
-- `gradle-docs/.claude-plugin/plugin.json` and `gradle-docs/.codex-plugin/plugin.json` are versionless plugin manifests.
+- `gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
+- `gradle-rag/.claude-plugin/plugin.json` and `gradle-rag/.codex-plugin/plugin.json` are versionless plugin manifests.
 
 The crawler indexes content pages from the current User Manual, release notes, Groovy DSL, Kotlin DSL, and Java API while skipping generated navigation/search pages that would dilute search results.
 
@@ -26,7 +26,7 @@ The generated documentation index and built binary are intentionally not committ
 # Fast proof that crawling, indexing, and embedding work
 task smoke-db
 task build-fast
-./gradle-docs/skills/gradle/references/gradle-rag search "configuration cache" --limit 5
+./gradle-rag/skills/gradle-rag/references/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build
 task build
@@ -38,10 +38,10 @@ task test
 ## CLI
 
 ```bash
-gradle-docs/skills/gradle/references/gradle-rag search "TaskProvider register" --limit 5
-gradle-docs/skills/gradle/references/gradle-rag search "configuration cache requirements" --full
-gradle-docs/skills/gradle/references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
-gradle-docs/skills/gradle/references/gradle-rag info
+gradle-rag/skills/gradle-rag/references/gradle-rag search "TaskProvider register" --limit 5
+gradle-rag/skills/gradle-rag/references/gradle-rag search "configuration cache requirements" --full
+gradle-rag/skills/gradle-rag/references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
+gradle-rag/skills/gradle-rag/references/gradle-rag info
 ```
 
 ## Install As A Local Plugin
@@ -51,9 +51,9 @@ task build      # crawl full current docs and build the local binary
 task install-plugins
 ```
 
-This repository includes a versionless local plugin source at `gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
+This repository includes a versionless local plugin source at `gradle-rag`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
 
-The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle` and `~/.codex/skills/gradle` so Claude and Codex expose the Gradle skill only once through the plugin.
+The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle`, `~/.codex/skills/gradle`, `~/.claude/skills/gradle-rag`, and `~/.codex/skills/gradle-rag` so Claude and Codex expose the Gradle RAG skill only once through the plugin.
 
 `task install-local` is kept as a compatibility alias for `task install-plugins`.
 

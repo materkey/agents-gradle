@@ -1,0 +1,15 @@
+{
+  "name": "gradle-rag",
+  "description": "Search the current official Gradle documentation with a local lexical index.",
+  "author": {
+    "name": "materkey"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Gradle RAG",
+    "shortDescription": "Local current Gradle documentation search.",
+    "longDescription": "Search a locally built SQLite FTS5 index of the current official Gradle documentation.",
+    "developerName": "materkey",
+    "category": "Developer Tools"
+  }
+}

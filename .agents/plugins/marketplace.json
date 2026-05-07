@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "gradle-docs",
+      "name": "gradle-rag",
       "source": {
         "source": "local",
-        "path": "./gradle-docs"
+        "path": "./gradle-rag"
       },
       "policy": {
         "installation": "AVAILABLE",

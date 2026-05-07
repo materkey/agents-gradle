@@ -1,5 +1,4 @@
 /GRADLE_DOCS_VERSION
 /dist/
-/gradle-rag
 /cmd/gradle-rag/db/gradle.db
-/gradle-docs/skills/gradle/references/gradle-rag
+/gradle-rag/skills/gradle-rag/references/gradle-rag

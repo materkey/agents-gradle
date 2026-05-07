@@ -3,7 +3,7 @@ version: '3'
 vars:
   GRADLE_DOCS_URL: https://docs.gradle.org/current/userguide/userguide.html
   DB_PATH: cmd/gradle-rag/db/gradle.db
-  BINARY_PATH: gradle-docs/skills/gradle/references/gradle-rag
+  BINARY_PATH: gradle-rag/skills/gradle-rag/references/gradle-rag
   DIST_DIR: dist
 
 tasks:
@@ -21,7 +21,7 @@ tasks:
     desc: Build gradle-rag binary for the current platform
     deps: [build-db]
     cmds:
-      - mkdir -p gradle-docs/skills/gradle/references
+      - mkdir -p gradle-rag/skills/gradle-rag/references
       - |
         VERSION="v0.$(date +%Y.%m%d)"
         go build -ldflags "-s -w -X main.version=$VERSION" -o "{{.BINARY_PATH}}" ./cmd/gradle-rag
@@ -29,7 +29,7 @@ tasks:
   build-fast:
     desc: Build gradle-rag using the current checked-in/generated database
     cmds:
-      - mkdir -p gradle-docs/skills/gradle/references
+      - mkdir -p gradle-rag/skills/gradle-rag/references
       - go build -o "{{.BINARY_PATH}}" ./cmd/gradle-rag
 
   test:
@@ -46,7 +46,7 @@ tasks:
     deps: [build-fast]
     cmds:
       - |
-        for path in "$HOME/.claude/skills/gradle" "$HOME/.codex/skills/gradle"; do
+        for path in "$HOME/.claude/skills/gradle" "$HOME/.codex/skills/gradle" "$HOME/.claude/skills/gradle-rag" "$HOME/.codex/skills/gradle-rag"; do
           if [ -L "$path" ]; then
             rm "$path"
           elif [ -e "$path" ]; then
@@ -54,14 +54,27 @@ tasks:
             exit 1
           fi
         done
+      - |
+        config="$HOME/.codex/config.toml"
+        if [ -f "$config" ]; then
+          tmp="${config}.tmp"
+          awk '
+            /^\[plugins\."(gradle-docs|gradle)@agents-gradle"\]/ { skip = 1; next }
+            skip && /^\[/ { skip = 0 }
+            !skip { print }
+          ' "$config" > "$tmp"
+          mv "$tmp" "$config"
+        fi
       - codex plugin marketplace add "$(pwd)"
-      - python3 "$HOME/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-docs --force
+      - python3 "$HOME/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-rag --force
       - claude plugin marketplace add "$(pwd)"
-      - claude plugin install gradle-docs@agents-gradle --scope user
+      - claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
+      - claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
+      - claude plugin install gradle-rag@agents-gradle --scope user
 
   clean:
     desc: Remove build artifacts
     cmds:
-      - rm -rf "{{.DIST_DIR}}" gradle-rag
+      - rm -rf "{{.DIST_DIR}}"
       - rm -f "{{.DB_PATH}}"
       - rm -f "{{.BINARY_PATH}}"

@@ -8,8 +8,8 @@
   },
   "plugins": [
     {
-      "name": "gradle-docs",
-      "source": "./gradle-docs",
+      "name": "gradle-rag",
+      "source": "./gradle-rag",
       "description": "Search current official Gradle documentation with a local lexical index"
     }
   ]

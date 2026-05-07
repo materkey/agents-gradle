@@ -1,5 +1,5 @@
 ---
-name: gradle
+name: gradle-rag
 description: "Search the current official Gradle documentation with a local lexical index."
 argument-hint: "[Gradle concept, API, DSL, plugin, error, or build behavior question]"
 ---

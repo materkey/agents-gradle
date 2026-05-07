@@ -1,8 +1,7 @@
 {
-  "name": "gradle-docs",
+  "name": "gradle-rag",
   "description": "Search current official Gradle documentation with a local lexical index.",
   "author": {
     "name": "materkey"
   }
 }
-

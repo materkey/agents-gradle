@@ -3,16 +3,22 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="${HOME}/.claude/skills/gradle"
-REF_DIR="${SKILL_DIR}/references"
 
 cd "$ROOT"
 task build
 
-mkdir -p "$REF_DIR"
-cp skill/gradle/SKILL.md "${SKILL_DIR}/SKILL.md"
-cp gradle-rag "${REF_DIR}/gradle-rag"
+rm -rf "$SKILL_DIR" "${HOME}/.codex/skills/gradle"
+mkdir -p "${HOME}/.claude/skills" "${HOME}/.codex/skills"
+ln -s "${ROOT}/gradle-docs/skills/gradle" "$SKILL_DIR"
+ln -s "${ROOT}/gradle-docs/skills/gradle" "${HOME}/.codex/skills/gradle"
+
+codex plugin marketplace add "$ROOT"
+python3 "${HOME}/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-docs --force
+
+claude plugin marketplace add "$ROOT"
+claude plugin install gradle-docs@agents-gradle --scope user
 
 echo "Installed Gradle docs skill:"
-echo "  Skill:  ${SKILL_DIR}/SKILL.md"
-echo "  Binary: ${REF_DIR}/gradle-rag"
-
+echo "  Claude skill: ${SKILL_DIR}"
+echo "  Codex skill:  ${HOME}/.codex/skills/gradle"
+echo "  Plugin:       gradle-docs@agents-gradle"

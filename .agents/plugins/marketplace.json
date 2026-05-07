@@ -8,7 +8,7 @@
       "name": "gradle-docs",
       "source": {
         "source": "local",
-        "path": "./plugins/gradle-docs"
+        "path": "./gradle-docs"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -18,4 +18,3 @@
     }
   ]
 }
-

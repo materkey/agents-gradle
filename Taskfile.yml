@@ -3,6 +3,7 @@ version: '3'
 vars:
   GRADLE_DOCS_URL: https://docs.gradle.org/current/userguide/userguide.html
   DB_PATH: cmd/gradle-rag/db/gradle.db
+  BINARY_PATH: gradle-docs/skills/gradle/references/gradle-rag
   DIST_DIR: dist
 
 tasks:
@@ -20,14 +21,16 @@ tasks:
     desc: Build gradle-rag binary for the current platform
     deps: [build-db]
     cmds:
+      - mkdir -p gradle-docs/skills/gradle/references
       - |
         VERSION="v0.$(date +%Y.%m%d)"
-        go build -ldflags "-s -w -X main.version=$VERSION" -o gradle-rag ./cmd/gradle-rag
+        go build -ldflags "-s -w -X main.version=$VERSION" -o "{{.BINARY_PATH}}" ./cmd/gradle-rag
 
   build-fast:
     desc: Build gradle-rag using the current checked-in/generated database
     cmds:
-      - go build -o gradle-rag ./cmd/gradle-rag
+      - mkdir -p gradle-docs/skills/gradle/references
+      - go build -o "{{.BINARY_PATH}}" ./cmd/gradle-rag
 
   test:
     desc: Run Go tests
@@ -35,15 +38,26 @@ tasks:
       - go test ./...
 
   install-local:
-    desc: Install the skill and binary into ~/.claude/skills/gradle
-    deps: [build]
+    desc: Install direct Claude and Codex skills as symlinks to the plugin skill
+    deps: [build-fast]
     cmds:
-      - mkdir -p "$HOME/.claude/skills/gradle/references"
-      - cp skill/gradle/SKILL.md "$HOME/.claude/skills/gradle/SKILL.md"
-      - cp gradle-rag "$HOME/.claude/skills/gradle/references/gradle-rag"
+      - rm -rf "$HOME/.claude/skills/gradle" "$HOME/.codex/skills/gradle"
+      - mkdir -p "$HOME/.claude/skills" "$HOME/.codex/skills"
+      - ln -s "$(pwd)/gradle-docs/skills/gradle" "$HOME/.claude/skills/gradle"
+      - ln -s "$(pwd)/gradle-docs/skills/gradle" "$HOME/.codex/skills/gradle"
+
+  install-plugins:
+    desc: Install the versionless local plugin into Claude and Codex
+    deps: [build-fast]
+    cmds:
+      - codex plugin marketplace add "$(pwd)"
+      - python3 "$HOME/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-docs --force
+      - claude plugin marketplace add "$(pwd)"
+      - claude plugin install gradle-docs@agents-gradle --scope user
 
   clean:
     desc: Remove build artifacts
     cmds:
       - rm -rf "{{.DIST_DIR}}" gradle-rag
       - rm -f "{{.DB_PATH}}"
+      - rm -f "{{.BINARY_PATH}}"

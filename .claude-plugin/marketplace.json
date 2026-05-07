@@ -9,9 +9,8 @@
   "plugins": [
     {
       "name": "gradle-docs",
-      "source": "./plugins/gradle-docs",
+      "source": "./gradle-docs",
       "description": "Search current official Gradle documentation with a local lexical index"
     }
   ]
 }
-

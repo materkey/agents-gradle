@@ -8,32 +8,27 @@ argument-hint: "[Gradle concept, API, DSL, plugin, error, or build behavior ques
 
 Use this skill when the user asks about Gradle Build Tool behavior, Gradle APIs, the Groovy DSL, Kotlin DSL, core plugins, dependency management, configuration cache, task development, plugin development, or release/upgrade notes.
 
-The preferred bundled reference binary is `references/gradle-rag` relative to this `SKILL.md`.
-If the skill is installed directly rather than via plugin, the fallback path is:
-
-```bash
-~/.claude/skills/gradle/references/gradle-rag
-```
+The reference binary is `references/gradle-rag` relative to this `SKILL.md`. Resolve that path from the actual skill directory before running commands.
 
 ## Workflow
 
 1. Search first with a focused lexical query:
 
 ```bash
-~/.claude/skills/gradle/references/gradle-rag search "configuration cache requirements" --limit 5
+references/gradle-rag search "configuration cache requirements" --limit 5
 ```
 
 2. If a result is relevant but too terse, repeat with `--full` or fetch the exact section:
 
 ```bash
-~/.claude/skills/gradle/references/gradle-rag search "TaskProvider register" --full
-~/.claude/skills/gradle/references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
+references/gradle-rag search "TaskProvider register" --full
+references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
 ```
 
 3. Check index freshness when it matters:
 
 ```bash
-~/.claude/skills/gradle/references/gradle-rag info
+references/gradle-rag info
 ```
 
 ## Discipline

@@ -1,6 +1,6 @@
 # agents-gradle
 
-Local lexical search for the current official [Gradle documentation](https://docs.gradle.org/current/), packaged like `claude-code-fpf`: one crawler, one embedded SQLite FTS5 index, one `gradle-rag` binary, and one Claude Code skill.
+Local lexical search for the current official [Gradle documentation](https://docs.gradle.org/current/), packaged like `claude-code-fpf`: one crawler, one embedded SQLite FTS5 index, one `gradle-rag` binary, and one versionless Claude/Codex plugin.
 
 This is an independent project and is not affiliated with or endorsed by Gradle, Inc.
 
@@ -8,7 +8,8 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 
 - `cmd/crawler` starts at `https://docs.gradle.org/current/userguide/userguide.html`, follows same-host links under `/current/`, extracts page sections from HTML, and builds `cmd/gradle-rag/db/gradle.db`.
 - `cmd/gradle-rag` embeds that database into a single binary and performs lexical FTS5 search.
-- `skill/gradle/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
+- `gradle-docs/skills/gradle/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
+- `gradle-docs/.claude-plugin/plugin.json` and `gradle-docs/.codex-plugin/plugin.json` are versionless plugin manifests.
 
 The crawler indexes content pages from the current User Manual, release notes, Groovy DSL, Kotlin DSL, and Java API while skipping generated navigation/search pages that would dilute search results.
 
@@ -25,7 +26,7 @@ The generated documentation index and built binary are intentionally not committ
 # Fast proof that crawling, indexing, and embedding work
 task smoke-db
 task build-fast
-./gradle-rag search "configuration cache" --limit 5
+./gradle-docs/skills/gradle/references/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build
 task build
@@ -37,10 +38,10 @@ task test
 ## CLI
 
 ```bash
-gradle-rag search "TaskProvider register" --limit 5
-gradle-rag search "configuration cache requirements" --full
-gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
-gradle-rag info
+gradle-docs/skills/gradle/references/gradle-rag search "TaskProvider register" --limit 5
+gradle-docs/skills/gradle/references/gradle-rag search "configuration cache requirements" --full
+gradle-docs/skills/gradle/references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
+gradle-docs/skills/gradle/references/gradle-rag info
 ```
 
 ## Install As A Skill
@@ -51,25 +52,16 @@ task install-local
 
 This installs:
 
-- `~/.claude/skills/gradle/SKILL.md`
-- `~/.claude/skills/gradle/references/gradle-rag`
+- `~/.claude/skills/gradle` -> `gradle-docs/skills/gradle`
+- `~/.codex/skills/gradle` -> `gradle-docs/skills/gradle`
 
 ## Install As A Local Plugin
 
-This repository includes a versionless local plugin source at `plugins/gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
-
-After building the local binary, copy it into the plugin skill and install the marketplace:
+This repository includes a versionless local plugin source at `gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
 
 ```bash
-mkdir -p plugins/gradle-docs/skills/gradle/references
-cp skill/gradle/SKILL.md plugins/gradle-docs/skills/gradle/SKILL.md
-cp gradle-rag plugins/gradle-docs/skills/gradle/references/gradle-rag
-
-codex plugin marketplace add "$PWD"
-python3 ~/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py install agents-gradle gradle-docs --force
-
-claude plugin marketplace add "$PWD"
-claude plugin install gradle-docs@agents-gradle --scope user
+task build      # crawl full current docs and build the local binary
+task install-plugins
 ```
 
 ## Evidence Model

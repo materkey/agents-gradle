@@ -1,0 +1,5 @@
+/GRADLE_DOCS_VERSION
+/dist/
+/gradle-rag
+/cmd/gradle-rag/db/gradle.db
+

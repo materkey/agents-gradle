@@ -1,0 +1,49 @@
+version: '3'
+
+vars:
+  GRADLE_DOCS_URL: https://docs.gradle.org/current/userguide/userguide.html
+  DB_PATH: cmd/gradle-rag/db/gradle.db
+  DIST_DIR: dist
+
+tasks:
+  build-db:
+    desc: Crawl current Gradle docs and build the embedded SQLite FTS5 index
+    cmds:
+      - go run ./cmd/crawler --start "{{.GRADLE_DOCS_URL}}" --db "{{.DB_PATH}}"
+
+  smoke-db:
+    desc: Build a small capped index for fast local validation
+    cmds:
+      - go run ./cmd/crawler --start "{{.GRADLE_DOCS_URL}}" --db "{{.DB_PATH}}" --max-pages 80 --workers 4
+
+  build:
+    desc: Build gradle-rag binary for the current platform
+    deps: [build-db]
+    cmds:
+      - |
+        VERSION="v0.$(date +%Y.%m%d)"
+        go build -ldflags "-s -w -X main.version=$VERSION" -o gradle-rag ./cmd/gradle-rag
+
+  build-fast:
+    desc: Build gradle-rag using the current checked-in/generated database
+    cmds:
+      - go build -o gradle-rag ./cmd/gradle-rag
+
+  test:
+    desc: Run Go tests
+    cmds:
+      - go test ./...
+
+  install-local:
+    desc: Install the skill and binary into ~/.claude/skills/gradle
+    deps: [build]
+    cmds:
+      - mkdir -p "$HOME/.claude/skills/gradle/references"
+      - cp skill/gradle/SKILL.md "$HOME/.claude/skills/gradle/SKILL.md"
+      - cp gradle-rag "$HOME/.claude/skills/gradle/references/gradle-rag"
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf "{{.DIST_DIR}}" gradle-rag
+      - rm -f "{{.DB_PATH}}"

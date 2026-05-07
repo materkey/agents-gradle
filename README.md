@@ -44,25 +44,18 @@ gradle-docs/skills/gradle/references/gradle-rag page "https://docs.gradle.org/cu
 gradle-docs/skills/gradle/references/gradle-rag info
 ```
 
-## Install As A Skill
-
-```bash
-task install-local
-```
-
-This installs:
-
-- `~/.claude/skills/gradle` -> `gradle-docs/skills/gradle`
-- `~/.codex/skills/gradle` -> `gradle-docs/skills/gradle`
-
 ## Install As A Local Plugin
-
-This repository includes a versionless local plugin source at `gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
 
 ```bash
 task build      # crawl full current docs and build the local binary
 task install-plugins
 ```
+
+This repository includes a versionless local plugin source at `gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
+
+The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle` and `~/.codex/skills/gradle` so Claude and Codex expose the Gradle skill only once through the plugin.
+
+`task install-local` is kept as a compatibility alias for `task install-plugins`.
 
 ## Evidence Model
 

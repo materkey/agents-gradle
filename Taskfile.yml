@@ -38,18 +38,22 @@ tasks:
       - go test ./...
 
   install-local:
-    desc: Install direct Claude and Codex skills as symlinks to the plugin skill
-    deps: [build-fast]
-    cmds:
-      - rm -rf "$HOME/.claude/skills/gradle" "$HOME/.codex/skills/gradle"
-      - mkdir -p "$HOME/.claude/skills" "$HOME/.codex/skills"
-      - ln -s "$(pwd)/gradle-docs/skills/gradle" "$HOME/.claude/skills/gradle"
-      - ln -s "$(pwd)/gradle-docs/skills/gradle" "$HOME/.codex/skills/gradle"
+    desc: Install the versionless local plugin into Claude and Codex
+    deps: [install-plugins]
 
   install-plugins:
     desc: Install the versionless local plugin into Claude and Codex
     deps: [build-fast]
     cmds:
+      - |
+        for path in "$HOME/.claude/skills/gradle" "$HOME/.codex/skills/gradle"; do
+          if [ -L "$path" ]; then
+            rm "$path"
+          elif [ -e "$path" ]; then
+            echo "Refusing to remove non-symlink legacy skill at $path" >&2
+            exit 1
+          fi
+        done
       - codex plugin marketplace add "$(pwd)"
       - python3 "$HOME/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-docs --force
       - claude plugin marketplace add "$(pwd)"

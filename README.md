@@ -54,6 +54,24 @@ This installs:
 - `~/.claude/skills/gradle/SKILL.md`
 - `~/.claude/skills/gradle/references/gradle-rag`
 
+## Install As A Local Plugin
+
+This repository includes a versionless local plugin source at `plugins/gradle-docs`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
+
+After building the local binary, copy it into the plugin skill and install the marketplace:
+
+```bash
+mkdir -p plugins/gradle-docs/skills/gradle/references
+cp skill/gradle/SKILL.md plugins/gradle-docs/skills/gradle/SKILL.md
+cp gradle-rag plugins/gradle-docs/skills/gradle/references/gradle-rag
+
+codex plugin marketplace add "$PWD"
+python3 ~/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py install agents-gradle gradle-docs --force
+
+claude plugin marketplace add "$PWD"
+claude plugin install gradle-docs@agents-gradle --scope user
+```
+
 ## Evidence Model
 
 `gradle-rag info` reports the Gradle docs version, crawl timestamp, source URL, scheduled page count, indexed page count, and chunk count from the embedded database. Treat that as evidence for the exact documentation snapshot being searched.

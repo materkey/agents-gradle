@@ -2,4 +2,4 @@
 /dist/
 /gradle-rag
 /cmd/gradle-rag/db/gradle.db
-
+/plugins/gradle-docs/skills/gradle/references/gradle-rag

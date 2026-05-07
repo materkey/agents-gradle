@@ -1,0 +1,17 @@
+{
+  "name": "agents-gradle",
+  "owner": {
+    "name": "materkey"
+  },
+  "metadata": {
+    "description": "Local Gradle documentation search plugin marketplace"
+  },
+  "plugins": [
+    {
+      "name": "gradle-docs",
+      "source": "./plugins/gradle-docs",
+      "description": "Search current official Gradle documentation with a local lexical index"
+    }
+  ]
+}
+

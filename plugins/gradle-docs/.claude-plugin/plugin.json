@@ -1,0 +1,8 @@
+{
+  "name": "gradle-docs",
+  "description": "Search current official Gradle documentation with a local lexical index.",
+  "author": {
+    "name": "materkey"
+  }
+}
+

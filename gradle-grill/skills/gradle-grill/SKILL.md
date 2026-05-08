@@ -1,6 +1,6 @@
 ---
 name: gradle-grill
-description: Stress-test Gradle/AGP implementation choices against the official Gradle and AGP documentation. Use when the user is about to write a Gradle plugin, build script, task, or convention plugin and wants to know the most idiomatic way. Generates 2–4 candidate variants, cross-checks each against Gradle docs via gradle-rag and AGP source via agp-sources, ranks them, and returns the most correct option with citations. Triggers on "как лучше в gradle", "правильный способ X в gradle", "идиоматично", "challenge gradle approach", "грилль gradle", "gradle-grill", "afterEvaluate vs", "tasks.register vs", "as a plugin author".
+description: Challenge a Gradle/AGP implementation choice against the official docs. Generates 2–4 candidate variants, cross-checks each via gradle-rag and AGP source, ranks them, and recommends the most idiomatic option with citations.
 ---
 
 # Gradle Grill
@@ -15,6 +15,8 @@ This skill exists because Gradle has accumulated several generations of APIs (ea
 - The user asks "where should I put X" — a hook callback, a task config, a precondition check, a DSL override.
 - The user is about to write or edit a `Plugin<Project>`, convention plugin, custom task, or build-script `apply`/`register` block.
 - A code review surfaces eager APIs (`tasks.create`, `tasks.getByName`, `afterEvaluate`, `File.exists()` in config, `configurations.X.files` in config).
+
+Trigger phrases include: "как лучше в gradle", "правильный способ X в gradle", "идиоматично", "challenge gradle approach", "гриль gradle", "gradle-grill", "afterEvaluate vs", "tasks.register vs", "as a plugin author".
 
 Do not invoke for pure code-search ("where is X used") — use `curiosity` or `Grep`. Do not invoke for trace analysis — use `perfetto-trace`.
 

@@ -67,17 +67,9 @@ tasks:
         fi
       - codex plugin marketplace add "$(pwd)"
       - |
-        # Pick the newest available Python and ensure `tomllib` works on 3.9/3.10
-        # via the shim that aliases `tomli`.
-        PY=""
-        for cmd in python3.13 python3.12 python3.11 python3; do
-          if command -v "$cmd" >/dev/null 2>&1 && "$cmd" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' 2>/dev/null; then
-            PY="$cmd"; break
-          fi
-        done
-        if [ -z "$PY" ]; then echo "Need Python 3.9+"; exit 1; fi
-        if ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then
-          "$PY" -c 'import tomli' 2>/dev/null || "$PY" -m pip install --user --quiet tomli
+        PY="$(command -v python3.13 || command -v python3.12 || command -v python3.11 || command -v python3 || true)"
+        if [ -z "$PY" ] || ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)'; then
+          echo "Need Python 3.9+ (found: ${PY:-none})" >&2; exit 1
         fi
         "$PY" "$(pwd)/scripts/pluginctl-shim.py" install agents-gradle gradle-rag --force
         "$PY" "$(pwd)/scripts/pluginctl-shim.py" install agents-gradle gradle-grill --force

@@ -4,13 +4,18 @@
     "name": "materkey"
   },
   "metadata": {
-    "description": "Local Gradle documentation search plugin marketplace"
+    "description": "Gradle agent tooling: documentation search and idiomatic-implementation grilling"
   },
   "plugins": [
     {
       "name": "gradle-rag",
       "source": "./gradle-rag",
       "description": "Search current official Gradle documentation with a local lexical index"
+    },
+    {
+      "name": "gradle-grill",
+      "source": "./gradle-grill",
+      "description": "Stress-test Gradle/AGP implementation choices against the official docs and recommend the most idiomatic option"
     }
   ]
 }

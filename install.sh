@@ -28,11 +28,14 @@ fi
 
 codex plugin marketplace add "$ROOT"
 python3 "${HOME}/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-rag --force
+python3 "${HOME}/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-grill --force
 
 claude plugin marketplace add "$ROOT"
 claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
 claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
 claude plugin install gradle-rag@agents-gradle --scope user
+claude plugin install gradle-grill@agents-gradle --scope user
 
-echo "Installed Gradle docs skill:"
-echo "  Plugin:       gradle-rag@agents-gradle"
+echo "Installed Gradle plugins:"
+echo "  - gradle-rag@agents-gradle"
+echo "  - gradle-grill@agents-gradle"

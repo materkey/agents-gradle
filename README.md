@@ -1,6 +1,11 @@
 # agents-gradle
 
-Local lexical search for the current official [Gradle documentation](https://docs.gradle.org/current/), packaged like `claude-code-fpf`: one crawler, one embedded SQLite FTS5 index, one `gradle-rag` binary, and one versionless Claude/Codex plugin.
+A local marketplace of Gradle/AGP agent tooling for Claude Code and Codex.
+
+Plugins:
+
+- **`gradle-rag`** — local lexical search of the current official [Gradle documentation](https://docs.gradle.org/current/), backed by an embedded SQLite FTS5 index and a `gradle-rag` Go binary.
+- **`gradle-grill`** — pure-skill workflow that stress-tests Gradle/AGP implementation choices against the official docs (via `gradle-rag`) and AGP source, ranks variants, and recommends the most idiomatic option with citations.
 
 This is an independent project and is not affiliated with or endorsed by Gradle, Inc.
 
@@ -9,7 +14,8 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 - `cmd/crawler` starts at `https://docs.gradle.org/current/userguide/userguide.html`, follows same-host links under `/current/`, extracts page sections from HTML, and builds `cmd/gradle-rag/db/gradle.db`.
 - `cmd/gradle-rag` embeds that database into a single binary and performs lexical FTS5 search.
 - `gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
-- `gradle-rag/.claude-plugin/plugin.json` and `gradle-rag/.codex-plugin/plugin.json` are versionless plugin manifests.
+- `gradle-grill/skills/gradle-grill/SKILL.md` is a pure-text skill — no binary — that orchestrates `gradle-rag` and other doc tools to challenge implementation variants.
+- `*/.claude-plugin/plugin.json` and `*/.codex-plugin/plugin.json` are versionless plugin manifests.
 
 The crawler indexes content pages from the current User Manual, release notes, Groovy DSL, Kotlin DSL, and Java API while skipping generated navigation/search pages that would dilute search results.
 
@@ -47,13 +53,13 @@ gradle-rag/skills/gradle-rag/references/gradle-rag info
 ## Install As A Local Plugin
 
 ```bash
-task build      # crawl full current docs and build the local binary
-task install-plugins
+task build              # crawl full current docs and build the gradle-rag binary
+task install-plugins    # install both gradle-rag and gradle-grill into Claude and Codex
 ```
 
-This repository includes a versionless local plugin source at `gradle-rag`. The plugin manifests intentionally omit `version`; Codex installs it as `local`, while Claude Code caches it from the current source revision.
+This repository ships two versionless local plugin sources: `gradle-rag/` and `gradle-grill/`. The plugin manifests intentionally omit `version`; Codex installs them as `local`, while Claude Code caches them from the current source revision.
 
-The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle`, `~/.codex/skills/gradle`, `~/.claude/skills/gradle-rag`, and `~/.codex/skills/gradle-rag` so Claude and Codex expose the Gradle RAG skill only once through the plugin.
+The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle`, `~/.codex/skills/gradle`, `~/.claude/skills/gradle-rag`, and `~/.codex/skills/gradle-rag` so Claude and Codex expose the skills only through the plugins.
 
 `task install-local` is kept as a compatibility alias for `task install-plugins`.
 

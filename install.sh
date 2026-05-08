@@ -26,9 +26,34 @@ if [ -f "$config" ]; then
   mv "$tmp" "$config"
 fi
 
+# pluginctl.py upstream requires `tomllib` (Python 3.11+). To support
+# Python 3.9/3.10 we run it through a shim that aliases `tomli` as
+# `tomllib`. The shim is a no-op on 3.11+. We pick the newest available
+# interpreter automatically; if it is older than 3.11 we make sure the
+# `tomli` backport is present.
+PYTHON_FOR_PLUGINCTL=""
+for cmd in python3.13 python3.12 python3.11 python3; do
+  if command -v "$cmd" >/dev/null 2>&1; then
+    if "$cmd" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' 2>/dev/null; then
+      PYTHON_FOR_PLUGINCTL="$cmd"
+      break
+    fi
+  fi
+done
+if [ -z "$PYTHON_FOR_PLUGINCTL" ]; then
+  echo "install.sh: need Python 3.9+ on PATH for pluginctl-shim.py" >&2
+  exit 1
+fi
+if ! "$PYTHON_FOR_PLUGINCTL" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then
+  if ! "$PYTHON_FOR_PLUGINCTL" -c 'import tomli' 2>/dev/null; then
+    echo "install.sh: $PYTHON_FOR_PLUGINCTL is older than 3.11, installing 'tomli' backport into user site"
+    "$PYTHON_FOR_PLUGINCTL" -m pip install --user --quiet tomli
+  fi
+fi
+
 codex plugin marketplace add "$ROOT"
-python3 "${HOME}/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-rag --force
-python3 "${HOME}/.codex/plugins/cache/agent-thingz/plugin-management/0.1.0/scripts/pluginctl.py" install agents-gradle gradle-grill --force
+"$PYTHON_FOR_PLUGINCTL" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle gradle-rag --force
+"$PYTHON_FOR_PLUGINCTL" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle gradle-grill --force
 
 claude plugin marketplace add "$ROOT"
 claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true

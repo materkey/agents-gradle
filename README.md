@@ -25,6 +25,7 @@ The generated documentation index and built binary are intentionally not committ
 
 - Go 1.25+
 - [Task](https://taskfile.dev/) for the documented commands
+- Python 3.9+ on `PATH` (the installer auto-detects the newest available; on 3.9/3.10 the [`tomli`](https://pypi.org/project/tomli/) backport is auto-installed into the user site to satisfy upstream `pluginctl.py`)
 
 ## Development
 

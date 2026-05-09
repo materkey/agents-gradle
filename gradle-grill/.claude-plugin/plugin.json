@@ -1,6 +1,6 @@
 {
   "name": "gradle-grill",
-  "description": "Stress-test Gradle/AGP implementation choices against the official documentation. Generates candidate variants, cross-checks each, and recommends the most idiomatic option with citations.",
+  "description": "Stress-test Gradle/AGP implementation choices against the official documentation and relevant source code. Generates candidate variants, cross-checks each, and recommends the most idiomatic option with citations.",
   "author": {
     "name": "materkey"
   }

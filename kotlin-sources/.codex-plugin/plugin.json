@@ -1,0 +1,15 @@
+{
+  "name": "kotlin-sources",
+  "description": "Explore Kotlin compiler, standard library, and plugin source code.",
+  "author": {
+    "name": "materkey"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Kotlin Sources",
+    "shortDescription": "Search Kotlin compiler and library sources.",
+    "longDescription": "Clone, update, search, read, and compare Kotlin compiler, standard library, and plugin source code.",
+    "developerName": "materkey",
+    "category": "Developer Tools"
+  }
+}

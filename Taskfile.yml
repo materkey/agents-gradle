@@ -38,11 +38,11 @@ tasks:
       - go test ./...
 
   install-local:
-    desc: Install the versionless local plugin into Claude and Codex
+    desc: Install the versionless local plugins into Claude and Codex
     deps: [install-plugins]
 
   install-plugins:
-    desc: Install the versionless local plugin into Claude and Codex
+    desc: Install the versionless local plugins into Claude and Codex
     deps: [build-fast]
     cmds:
       - |
@@ -71,13 +71,16 @@ tasks:
         if [ -z "$PY" ] || ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)'; then
           echo "Need Python 3.9+ (found: ${PY:-none})" >&2; exit 1
         fi
-        "$PY" "$(pwd)/scripts/pluginctl-shim.py" install agents-gradle gradle-rag --force
-        "$PY" "$(pwd)/scripts/pluginctl-shim.py" install agents-gradle gradle-grill --force
+        for plugin in gradle-rag gradle-grill agp-sources gradle-sources kotlin-sources ksp-sources; do
+          "$PY" "$(pwd)/scripts/pluginctl-shim.py" install agents-gradle "$plugin" --force
+        done
       - claude plugin marketplace add "$(pwd)"
       - claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
       - claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
-      - claude plugin install gradle-rag@agents-gradle --scope user
-      - claude plugin install gradle-grill@agents-gradle --scope user
+      - |
+        for plugin in gradle-rag gradle-grill agp-sources gradle-sources kotlin-sources ksp-sources; do
+          claude plugin install "${plugin}@agents-gradle" --scope user
+        done
 
   clean:
     desc: Remove build artifacts

@@ -1,0 +1,7 @@
+{
+  "name": "agp-sources",
+  "description": "Explore Android Gradle Plugin source code from local or downloaded Google Maven source jars.",
+  "author": {
+    "name": "materkey"
+  }
+}

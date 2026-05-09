@@ -8,7 +8,7 @@
   "interface": {
     "displayName": "Gradle Grill",
     "shortDescription": "Challenge Gradle/AGP variants and pick the most idiomatic.",
-    "longDescription": "Generates 2–4 candidate variants for a Gradle/AGP implementation choice, cross-checks each against the official Gradle docs (via gradle-rag) and AGP source, ranks them by adherence to documented best practices, and recommends the most idiomatic option with citations.",
+    "longDescription": "Generates 2–4 candidate variants for a Gradle/AGP implementation choice, cross-checks each against the official Gradle docs (via gradle-rag) and relevant AGP, Gradle, Kotlin, or KSP source, ranks them by adherence to documented best practices, and recommends the most idiomatic option with citations.",
     "developerName": "materkey",
     "category": "Developer Tools"
   }

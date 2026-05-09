@@ -1,0 +1,7 @@
+{
+  "name": "gradle-sources",
+  "description": "Explore Gradle Build Tool source code from a local clone.",
+  "author": {
+    "name": "materkey"
+  }
+}

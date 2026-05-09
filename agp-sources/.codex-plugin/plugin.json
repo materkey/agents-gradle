@@ -1,0 +1,15 @@
+{
+  "name": "agp-sources",
+  "description": "Explore Android Gradle Plugin source code from local or downloaded Google Maven source jars.",
+  "author": {
+    "name": "materkey"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AGP Sources",
+    "shortDescription": "Search Android Gradle Plugin source jars.",
+    "longDescription": "Download Android Gradle Plugin source jars from Google Maven and search AGP, build tools, SDK common, and lint implementation sources.",
+    "developerName": "materkey",
+    "category": "Developer Tools"
+  }
+}

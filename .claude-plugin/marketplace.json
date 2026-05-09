@@ -4,7 +4,7 @@
     "name": "materkey"
   },
   "metadata": {
-    "description": "Gradle agent tooling: documentation search and idiomatic-implementation grilling"
+    "description": "Gradle agent tooling: documentation search, source exploration, and idiomatic-implementation grilling"
   },
   "plugins": [
     {
@@ -15,7 +15,27 @@
     {
       "name": "gradle-grill",
       "source": "./gradle-grill",
-      "description": "Stress-test Gradle/AGP implementation choices against the official docs and recommend the most idiomatic option"
+      "description": "Stress-test Gradle/AGP implementation choices against official docs and relevant source code"
+    },
+    {
+      "name": "agp-sources",
+      "source": "./agp-sources",
+      "description": "Explore Android Gradle Plugin source code from downloaded Google Maven source jars"
+    },
+    {
+      "name": "gradle-sources",
+      "source": "./gradle-sources",
+      "description": "Clone, search, and compare Gradle Build Tool source code"
+    },
+    {
+      "name": "kotlin-sources",
+      "source": "./kotlin-sources",
+      "description": "Clone, search, read, and compare Kotlin compiler and plugin source code"
+    },
+    {
+      "name": "ksp-sources",
+      "source": "./ksp-sources",
+      "description": "Clone and search Google KSP source code and KSP1/KSP2 implementation details"
     }
   ]
 }

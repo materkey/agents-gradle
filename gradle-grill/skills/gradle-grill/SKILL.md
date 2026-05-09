@@ -57,10 +57,14 @@ gradle-rag search "configuration cache afterEvaluate" --limit 4
 When the topic is AGP-specific (`AndroidComponentsExtension`, `LibraryAndroidComponentsExtension`, `Variant`, `finalizeDsl`, `onVariants`, source sets), additionally search agp-sources:
 
 ```bash
-agp-sources search "AndroidComponentsExtension finalizeDsl" --version 8.8
+# from the agp-sources skill directory
+scripts/fetch_agp_sources.py --version 8.8
+rg "AndroidComponentsExtension|finalizeDsl" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}/8.8.0/com.android.tools.build/gradle"
 ```
 
 If a Gradle-/AGP-internal mechanism is being compared, pull the actual source via `gradle-sources` / `agp-sources` to see what the API guarantees, not just what the docs say.
+
+When the topic is KSP-specific (`com.google.devtools.ksp`, KSP1/KSP2, symbol processors, incremental processing), additionally pull the actual source via `ksp-sources`.
 
 Capture for each variant:
 - One direct quote from the docs (≤ 30 words)
@@ -142,4 +146,5 @@ This is the part that makes the skill a "grill" rather than a "yes-man".
 - `agp-sources` — AGP class/method lookup (versioned)
 - `gradle-sources` — Gradle internals (when behaviour, not just API, is in question)
 - `kotlin-sources` — when Kotlin compiler/Gradle plugin behaviour matters (KSP, KAPT, kotlin-gradle-plugin)
+- `ksp-sources` — when KSP API, Gradle plugin, or KSP1/KSP2 implementation details matter
 - `Read`, `Grep`, `Bash` — only when the surrounding repo's existing pattern needs to be inspected before recommending

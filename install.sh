@@ -2,6 +2,14 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGINS=(
+  gradle-rag
+  gradle-grill
+  agp-sources
+  gradle-sources
+  kotlin-sources
+  ksp-sources
+)
 
 cd "$ROOT"
 task build
@@ -35,15 +43,18 @@ if [ -z "$PY" ] || ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3,
 fi
 
 codex plugin marketplace add "$ROOT"
-"$PY" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle gradle-rag --force
-"$PY" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle gradle-grill --force
+for plugin in "${PLUGINS[@]}"; do
+  "$PY" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle "$plugin" --force
+done
 
 claude plugin marketplace add "$ROOT"
 claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
 claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
-claude plugin install gradle-rag@agents-gradle --scope user
-claude plugin install gradle-grill@agents-gradle --scope user
+for plugin in "${PLUGINS[@]}"; do
+  claude plugin install "${plugin}@agents-gradle" --scope user
+done
 
 echo "Installed Gradle plugins:"
-echo "  - gradle-rag@agents-gradle"
-echo "  - gradle-grill@agents-gradle"
+for plugin in "${PLUGINS[@]}"; do
+  echo "  - ${plugin}@agents-gradle"
+done

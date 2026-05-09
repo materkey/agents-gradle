@@ -1,0 +1,15 @@
+{
+  "name": "ksp-sources",
+  "description": "Explore Google KSP source code and KSP1/KSP2 implementation details.",
+  "author": {
+    "name": "materkey"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KSP Sources",
+    "shortDescription": "Search Google KSP sources.",
+    "longDescription": "Clone, update, and search Google KSP source code, including API, Gradle plugin, KSP1, and KSP2 implementations.",
+    "developerName": "materkey",
+    "category": "Developer Tools"
+  }
+}

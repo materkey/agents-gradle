@@ -1,0 +1,7 @@
+{
+  "name": "kotlin-sources",
+  "description": "Explore Kotlin compiler, standard library, and plugin source code.",
+  "author": {
+    "name": "materkey"
+  }
+}

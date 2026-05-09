@@ -1,0 +1,15 @@
+{
+  "name": "gradle-sources",
+  "description": "Explore Gradle Build Tool source code from a local clone.",
+  "author": {
+    "name": "materkey"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Gradle Sources",
+    "shortDescription": "Search Gradle Build Tool sources.",
+    "longDescription": "Clone, update, search, and compare Gradle Build Tool source code for implementation-level investigation.",
+    "developerName": "materkey",
+    "category": "Developer Tools"
+  }
+}

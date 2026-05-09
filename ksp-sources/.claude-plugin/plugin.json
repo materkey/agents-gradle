@@ -1,0 +1,7 @@
+{
+  "name": "ksp-sources",
+  "description": "Explore Google KSP source code and KSP1/KSP2 implementation details.",
+  "author": {
+    "name": "materkey"
+  }
+}

@@ -54,6 +54,8 @@ gradle-rag search "tasks register lazy configuration block" --limit 4
 gradle-rag search "configuration cache afterEvaluate" --limit 4
 ```
 
+If the bare `gradle-rag` command is unavailable, invoke the `gradle-rag` skill and run its skill-local `bin/gradle-rag` wrapper instead. Do not treat a missing `PATH` entry as missing documentation.
+
 When the topic is AGP-specific (`AndroidComponentsExtension`, `LibraryAndroidComponentsExtension`, `Variant`, `finalizeDsl`, `onVariants`, source sets), additionally search agp-sources:
 
 ```bash

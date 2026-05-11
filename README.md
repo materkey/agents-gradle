@@ -17,7 +17,7 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 
 - `cmd/crawler` starts at `https://docs.gradle.org/current/userguide/userguide.html`, follows same-host links under `/current/`, extracts page sections from HTML, and builds `cmd/gradle-rag/db/gradle.db`.
 - `cmd/gradle-rag` embeds that database into a single binary and performs lexical FTS5 search.
-- `gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups.
+- `gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups. The skill ships a `bin/gradle-rag` wrapper, and the installer copies the built binary into `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux.
 - `gradle-grill/skills/gradle-grill/SKILL.md` is a pure-text skill — no binary — that orchestrates `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` to challenge implementation variants.
 - `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` package the source-lookup skills that Gradle workflows rely on as installable standalone plugins.
 - `*/.claude-plugin/plugin.json` and `*/.codex-plugin/plugin.json` are versionless plugin manifests.
@@ -30,7 +30,7 @@ The generated documentation index and built binary are intentionally not committ
 
 - Go 1.25+
 - [Task](https://taskfile.dev/) for the documented commands
-- Python 3.9+ on `PATH` (the installer auto-detects the newest available; on 3.9/3.10 the [`tomli`](https://pypi.org/project/tomli/) backport is auto-installed into the user site to satisfy upstream `pluginctl.py`)
+- Python 3.9+ on `PATH` for the self-contained Codex plugin installer
 
 ## Development
 
@@ -38,7 +38,7 @@ The generated documentation index and built binary are intentionally not committ
 # Fast proof that crawling, indexing, and embedding work
 task smoke-db
 task build-fast
-./gradle-rag/skills/gradle-rag/references/gradle-rag search "configuration cache" --limit 5
+./gradle-rag/skills/gradle-rag/bin/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build
 task build
@@ -63,10 +63,16 @@ Each destination can be overridden with `AGP_SOURCES_DIR`, `GRADLE_SOURCES_DIR`,
 ## CLI
 
 ```bash
-gradle-rag/skills/gradle-rag/references/gradle-rag search "TaskProvider register" --limit 5
-gradle-rag/skills/gradle-rag/references/gradle-rag search "configuration cache requirements" --full
-gradle-rag/skills/gradle-rag/references/gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
-gradle-rag/skills/gradle-rag/references/gradle-rag info
+gradle-rag search "TaskProvider register" --limit 5
+gradle-rag search "configuration cache requirements" --full
+gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.html#config_cache:requirements"
+gradle-rag info
+```
+
+If `~/.local/bin` is not in `PATH`, use the skill-local wrapper directly:
+
+```bash
+gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ```
 
 ## Install As A Local Plugin
@@ -75,6 +81,8 @@ gradle-rag/skills/gradle-rag/references/gradle-rag info
 task build              # crawl full current docs and build the gradle-rag binary
 task install-plugins    # install all local Gradle plugins into Claude and Codex
 ```
+
+`task install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 
 This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`; Codex installs them as `local`, while Claude Code caches them from the current source revision.
 

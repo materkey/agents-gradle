@@ -34,27 +34,26 @@ if [ -f "$config" ]; then
   mv "$tmp" "$config"
 fi
 
-# pluginctl.py upstream needs `tomllib` (Python 3.11+). The shim self-bootstraps
-# the `tomli` backport on 3.9/3.10, so the shell only has to find any Python ≥3.9.
 PY="$(command -v python3.13 || command -v python3.12 || command -v python3.11 || command -v python3 || true)"
 if [ -z "$PY" ] || ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)'; then
   echo "install.sh: need Python 3.9+ on PATH (found: ${PY:-none})" >&2
   exit 1
 fi
 
-codex plugin marketplace add "$ROOT"
-for plugin in "${PLUGINS[@]}"; do
-  "$PY" "$ROOT/scripts/pluginctl-shim.py" install agents-gradle "$plugin" --force
-done
+"$PY" "$ROOT/scripts/install-codex-plugins.py" --root "$ROOT" "${PLUGINS[@]}"
 
 claude plugin marketplace add "$ROOT"
 claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
 claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
 for plugin in "${PLUGINS[@]}"; do
+  claude plugin uninstall "${plugin}@agents-gradle" --scope user --keep-data || true
   claude plugin install "${plugin}@agents-gradle" --scope user
 done
+
+"$ROOT/scripts/install-gradle-rag-bin.sh"
 
 echo "Installed Gradle plugins:"
 for plugin in "${PLUGINS[@]}"; do
   echo "  - ${plugin}@agents-gradle"
 done
+echo "  - gradle-rag command at ${GRADLE_RAG_INSTALL_DIR:-${HOME}/.local/bin}/gradle-rag"

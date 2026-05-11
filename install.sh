@@ -12,7 +12,7 @@ PLUGINS=(
 )
 
 cd "$ROOT"
-task build
+make build
 
 for path in "${HOME}/.claude/skills/gradle" "${HOME}/.codex/skills/gradle" "${HOME}/.claude/skills/gradle-rag" "${HOME}/.codex/skills/gradle-rag"; do
   if [ -L "$path" ]; then

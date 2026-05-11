@@ -24,27 +24,27 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 
 The crawler indexes content pages from the current User Manual, release notes, Groovy DSL, Kotlin DSL, and Java API while skipping generated navigation/search pages that would dilute search results.
 
-The generated documentation index and built binary are intentionally not committed. Gradle documentation content is licensed separately by Gradle; build the index locally with `task build`.
+The generated documentation index and built binary are intentionally not committed. Gradle documentation content is licensed separately by Gradle; build the index locally with `make build`.
 
 ## Requirements
 
 - Go 1.25+
-- [Task](https://taskfile.dev/) for the documented commands
+- `make`
 - Python 3.9+ on `PATH` for the self-contained Codex plugin installer
 
 ## Development
 
 ```bash
 # Fast proof that crawling, indexing, and embedding work
-task smoke-db
-task build-fast
+make smoke-db
+make build-fast
 ./gradle-rag/skills/gradle-rag/bin/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build
-task build
+make build
 
 # Tests
-task test
+make test
 ```
 
 ## Source Bootstrap
@@ -78,17 +78,17 @@ gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ## Install As A Local Plugin
 
 ```bash
-task build              # crawl full current docs and build the gradle-rag binary
-task install-plugins    # install all local Gradle plugins into Claude and Codex
+make build              # crawl full current docs and build the gradle-rag binary
+make install-plugins    # install all local Gradle plugins into Claude and Codex
 ```
 
-`task install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
+`make install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 
 This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`; Codex installs them as `local`, while Claude Code caches them from the current source revision.
 
 The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle`, `~/.codex/skills/gradle`, `~/.claude/skills/gradle-rag`, and `~/.codex/skills/gradle-rag` so Claude and Codex expose the skills only through the plugins.
 
-`task install-local` is kept as a compatibility alias for `task install-plugins`.
+`make install-local` is kept as a compatibility alias for `make install-plugins`.
 
 ## Evidence Model
 

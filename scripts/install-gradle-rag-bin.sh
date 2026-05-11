@@ -16,7 +16,7 @@ esac
 
 if [ ! -f "$SOURCE" ] || [ ! -x "$SOURCE" ]; then
   echo "install-gradle-rag-bin.sh: built gradle-rag binary is missing or not executable: $SOURCE" >&2
-  echo "Run task build-fast or task build before installing." >&2
+  echo "Run make build-fast or make build before installing." >&2
   exit 1
 fi
 

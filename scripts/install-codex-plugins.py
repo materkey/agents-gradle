@@ -342,7 +342,7 @@ def install_plugin(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Install local agents-gradle plugins into the Codex plugin cache."
+        description="Install local-development agents-gradle plugins into the Codex plugin cache."
     )
     parser.add_argument(
         "--root",
@@ -382,6 +382,11 @@ def main() -> int:
 
     json.dump(
         {
+            "auto_updates": False,
+            "auto_update_note": (
+                "This local installer records source_type=local. Register agents-gradle "
+                "as a Git marketplace for Codex auto-updates."
+            ),
             "config_path": str(config_file),
             "marketplace": marketplace,
             "marketplace_root": str(marketplace_root),

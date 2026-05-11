@@ -8,9 +8,9 @@ argument-hint: "[Gradle concept, API, DSL, plugin, error, or build behavior ques
 
 Use this skill when the user asks about Gradle Build Tool behavior, Gradle APIs, the Groovy DSL, Kotlin DSL, core plugins, dependency management, configuration cache, task development, plugin development, or release/upgrade notes.
 
-Preferred command: `gradle-rag`. The local installer copies the built binary to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux.
+Preferred command: `gradle-rag`. The runtime binary must be available on `PATH`, or `GRADLE_RAG_BIN` must point to an executable binary.
 
-Fallback command: `bin/gradle-rag` relative to this `SKILL.md`. It resolves the generated binary at `references/gradle-rag`.
+Fallback command: `bin/gradle-rag` relative to this `SKILL.md`. The wrapper resolves `GRADLE_RAG_BIN`, then the first non-wrapper `gradle-rag` on `PATH`, then the local development binary at `references/gradle-rag`.
 
 If `gradle-rag` is not on `PATH`, resolve this skill's actual directory and run its `bin/gradle-rag` wrapper. Do not fail just because the bare command is unavailable.
 

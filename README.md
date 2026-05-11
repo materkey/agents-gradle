@@ -1,6 +1,6 @@
 # agents-gradle
 
-A local marketplace of Gradle/AGP agent tooling for Claude Code and Codex.
+A marketplace of Gradle/AGP agent tooling for Claude Code and Codex.
 
 Plugins:
 
@@ -76,18 +76,32 @@ gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache.h
 gradle-rag info
 ```
 
-If `~/.local/bin` is not in `PATH`, use the skill-local wrapper directly:
+When working from a local checkout, if `~/.local/bin` is not in `PATH`, use the skill-local wrapper directly. It falls back to the locally built binary under `references/`:
 
 ```bash
 gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ```
 
-## Install As A Local Plugin
+## Install For Codex Auto-Updates
+
+Codex auto-updates plugins from marketplaces registered as Git sources. For user installs, register this repository as a remote marketplace and install the plugins from Codex's plugin manager:
+
+```bash
+codex plugin marketplace add materkey/agents-gradle@main
+```
+
+Install `gradle-grill@agents-gradle` for the full workflow, or install the individual source/doc plugins directly. `gradle-grill` depends on `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources`.
+
+The `gradle-rag` plugin expects the `gradle-rag` binary on `PATH`, or `GRADLE_RAG_BIN` pointing at the binary. The plugin wrapper intentionally resolves the runtime binary from the environment so the plugin itself can come from an auto-updating remote marketplace.
+
+## Install From A Local Checkout
 
 ```bash
 make build              # crawl full current docs and build the gradle-rag binary
 make install-plugins    # install all local Gradle plugins into Claude and Codex
 ```
+
+This path is for development and offline local testing. It records the Codex marketplace as `source_type = "local"`, so Codex does not know a remote source for auto-updates.
 
 `make install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 

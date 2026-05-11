@@ -1,15 +1,55 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE="${BASH_SOURCE[0]}"
-while [ -L "$SOURCE" ]; do
-  SOURCE_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-  LINK_TARGET="$(readlink "$SOURCE")"
-  case "$LINK_TARGET" in
-    /*) SOURCE="$LINK_TARGET" ;;
-    *) SOURCE="$SOURCE_DIR/$LINK_TARGET" ;;
-  esac
-done
+resolve_path() {
+  local source="$1"
+  while [ -L "$source" ]; do
+    local source_dir
+    source_dir="$(cd -P "$(dirname "$source")" && pwd)"
+    local link_target
+    link_target="$(readlink "$source")"
+    case "$link_target" in
+      /*) source="$link_target" ;;
+      *) source="$source_dir/$link_target" ;;
+    esac
+  done
 
-SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-exec "$SCRIPT_DIR/../references/gradle-rag" "$@"
+  local source_dir
+  source_dir="$(cd -P "$(dirname "$source")" && pwd)"
+  printf '%s/%s\n' "$source_dir" "$(basename "$source")"
+}
+
+SELF="$(resolve_path "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd -P "$(dirname "$SELF")" && pwd)"
+
+if [ -n "${GRADLE_RAG_BIN:-}" ]; then
+  if [ ! -x "$GRADLE_RAG_BIN" ]; then
+    echo "gradle-rag wrapper: GRADLE_RAG_BIN is not executable: $GRADLE_RAG_BIN" >&2
+    exit 1
+  fi
+  if [ "$(resolve_path "$GRADLE_RAG_BIN")" = "$SELF" ]; then
+    echo "gradle-rag wrapper: GRADLE_RAG_BIN points back to this wrapper" >&2
+    exit 1
+  fi
+  exec "$GRADLE_RAG_BIN" "$@"
+fi
+
+while IFS= read -r candidate; do
+  if [ -x "$candidate" ] && [ "$(resolve_path "$candidate")" != "$SELF" ]; then
+    exec "$candidate" "$@"
+  fi
+done < <(type -P -a gradle-rag 2>/dev/null || true)
+
+local_binary="$SCRIPT_DIR/../references/gradle-rag"
+if [ -x "$local_binary" ]; then
+  exec "$local_binary" "$@"
+fi
+
+cat >&2 <<EOF
+gradle-rag wrapper: no gradle-rag executable found.
+
+Install the gradle-rag binary on PATH, set GRADLE_RAG_BIN, or build the local
+development binary at:
+  $local_binary
+EOF
+exit 1

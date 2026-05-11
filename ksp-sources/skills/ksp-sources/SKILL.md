@@ -77,6 +77,21 @@ grep -rn "incremental" "${KSP_SOURCES_DIR:-$HOME/.ksp-sources/ksp}/gradle-plugin
 grep -rn "IncrementalProcessor" "${KSP_SOURCES_DIR:-$HOME/.ksp-sources/ksp}/"
 ```
 
+## Setup
+
+Clone KSP sources before first use:
+
+```bash
+scripts/explore.sh init
+```
+
+For project-specific investigations, prefer the KSP version used by the target project branch. Look for the `com.google.devtools.ksp` plugin version in the target project's build files, settings, or version catalog, then pass a matching KSP tag or commit when available. If the exact plugin version does not map cleanly to a source tag, use the nearest relevant tag or commit and state that limitation.
+
+```bash
+scripts/explore.sh init <tag-or-commit>
+scripts/explore.sh update <tag-or-commit>
+```
+
 ## Workflow
 
 1. **Clone if needed**: The skill clones the repo to `${KSP_SOURCES_DIR:-$HOME/.ksp-sources/ksp}` if not present

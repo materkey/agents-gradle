@@ -91,6 +91,66 @@ def find_plugin_entry(payload: dict[str, Any], plugin_name: str) -> dict[str, An
     fail(f"Plugin '{plugin_name}' not found in marketplace. Available: {available or '<none>'}")
 
 
+def expand_plugin_dependencies(
+    marketplace_payload: dict[str, Any],
+    selected_plugins: list[str],
+    marketplace: str,
+) -> list[str]:
+    expanded: list[str] = []
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(plugin_name: str, chain: list[str]) -> None:
+        validate_segment("plugin name", plugin_name)
+        entry = find_plugin_entry(marketplace_payload, plugin_name)
+
+        if plugin_name in visited:
+            return
+        if plugin_name in visiting:
+            fail("Plugin dependency cycle: " + " -> ".join(chain + [plugin_name]))
+
+        visiting.add(plugin_name)
+        dependencies = entry.get("dependencies", [])
+        if not isinstance(dependencies, list):
+            fail(f"Plugin '{plugin_name}' dependencies must be an array.")
+        for dependency in dependencies:
+            dependency = normalize_dependency_ref(dependency, marketplace, plugin_name)
+            visit(dependency, chain + [plugin_name])
+        visiting.remove(plugin_name)
+        visited.add(plugin_name)
+        expanded.append(plugin_name)
+
+    for plugin_name in selected_plugins:
+        visit(plugin_name, [])
+
+    return expanded
+
+
+def normalize_dependency_ref(value: Any, marketplace: str, plugin_name: str) -> str:
+    if isinstance(value, str):
+        raw = value
+    elif isinstance(value, dict) and isinstance(value.get("name"), str):
+        raw = value["name"]
+        dep_marketplace = value.get("marketplace")
+        if dep_marketplace is not None:
+            if not isinstance(dep_marketplace, str):
+                fail(f"Plugin '{plugin_name}' dependency marketplace must be a string.")
+            raw = f"{raw}@{dep_marketplace}"
+    else:
+        fail(f"Plugin '{plugin_name}' dependency must be a string or object with a name.")
+
+    dep_name, _, dep_marketplace = raw.partition("@")
+    validate_segment("plugin dependency", dep_name)
+    if dep_marketplace:
+        validate_segment("plugin dependency marketplace", dep_marketplace)
+        if dep_marketplace != marketplace:
+            fail(
+                f"Plugin '{plugin_name}' depends on cross-marketplace plugin '{raw}', "
+                "which this local installer cannot install."
+            )
+    return dep_name
+
+
 def validate_segment(label: str, value: str) -> None:
     if not value or not SAFE_SEGMENT.match(value):
         fail(f"Unsafe {label}: {value!r}")
@@ -311,12 +371,13 @@ def main() -> int:
     ]
     if not selected_plugins:
         fail("No plugins selected.")
+    expanded_plugins = expand_plugin_dependencies(marketplace_payload, selected_plugins, marketplace)
 
     config_file = config_path(home)
     marketplace_config_updated = update_marketplace_config(config_file, marketplace, marketplace_root)
     installed = [
         install_plugin(home, marketplace_root, marketplace_payload, marketplace, plugin_name)
-        for plugin_name in selected_plugins
+        for plugin_name in expanded_plugins
     ]
 
     json.dump(
@@ -325,6 +386,8 @@ def main() -> int:
             "marketplace": marketplace,
             "marketplace_root": str(marketplace_root),
             "marketplace_config_updated": marketplace_config_updated,
+            "requested_plugins": selected_plugins,
+            "expanded_plugins": expanded_plugins,
             "installed": installed,
         },
         sys.stdout,

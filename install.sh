@@ -4,11 +4,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGINS=(
   gradle-rag
-  gradle-grill
   agp-sources
   gradle-sources
   kotlin-sources
   ksp-sources
+  gradle-grill
 )
 
 cd "$ROOT"

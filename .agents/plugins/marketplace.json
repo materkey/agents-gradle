@@ -18,6 +18,13 @@
     },
     {
       "name": "gradle-grill",
+      "dependencies": [
+        "gradle-rag",
+        "agp-sources",
+        "gradle-sources",
+        "kotlin-sources",
+        "ksp-sources"
+      ],
       "source": {
         "source": "local",
         "path": "./gradle-grill"

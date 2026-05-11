@@ -7,7 +7,7 @@ dependencies: ["python3"]
 
 # AGP Sources Exploration Skill
 
-Search and explore Android Gradle Plugin source code from local repository.
+Search and explore Android Gradle Plugin source code from downloaded Google Maven source jars.
 
 ## Repository Location
 
@@ -22,6 +22,8 @@ Before first use, download AGP source jars from Google Maven:
 ```bash
 scripts/fetch_agp_sources.py --version 8.13.0
 ```
+
+For project-specific investigations, prefer the AGP version used by the target project branch. Look for `com.android.application`, `com.android.library`, or `com.android.tools.build:gradle` in the target project's build files, settings, or version catalog, then pass that version to `--version`.
 
 Without `--version`, the script downloads the latest AGP version listed in Google Maven:
 
@@ -77,22 +79,22 @@ Main plugin implementation:
 # Find class in latest version
 find "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.* -name "*.kt" -o -name "*.java" | xargs grep -l "class YourClassName"
 
-# Find in specific version
-find "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0 -name "*.kt" -o -name "*.java" | xargs grep -l "class YourClassName"
+# Find in a specific downloaded version
+find "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0 -name "*.kt" -o -name "*.java" | xargs grep -l "class YourClassName"
 ```
 
 ### Search for task implementation
 
 ```bash
 # Find task by name pattern
-grep -r "class.*Task" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/ --include="*.kt" | head -20
+grep -r "class.*Task" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/ --include="*.kt" | head -20
 ```
 
 ### Find DSL property
 
 ```bash
 # Search for DSL property
-grep -r "propertyName" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/com/android/build/api/ --include="*.kt"
+grep -r "propertyName" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/com/android/build/api/ --include="*.kt"
 ```
 
 ## Compare Versions
@@ -100,8 +102,8 @@ grep -r "propertyName" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.androi
 ### Diff specific file between versions
 
 ```bash
-diff "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.6.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/SomeTask.kt \
-     "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/SomeTask.kt
+diff "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.12.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/SomeTask.kt \
+     "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/SomeTask.kt
 ```
 
 ### Find when class was added/changed
@@ -143,20 +145,20 @@ done
 ### Example 1: Find how minSdk is processed
 
 ```bash
-grep -rn "minSdk" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/ --include="*.kt" | head -30
+grep -rn "minSdk" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/ --include="*.kt" | head -30
 ```
 
 ### Example 2: Understand R8/ProGuard integration
 
 ```bash
-ls "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/*R8*.kt
-cat "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/R8Task.kt
+ls "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/*R8*.kt
+cat "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle/com/android/build/gradle/internal/tasks/R8Task.kt
 ```
 
 ### Example 3: Find all Gradle properties
 
 ```bash
-grep -r "GradleProperty\|Property<" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.7.0/com.android.tools.build/gradle-api/ --include="*.kt"
+grep -r "GradleProperty\|Property<" "${AGP_SOURCES_DIR:-$HOME/.agp-sources}"/8.13.0/com.android.tools.build/gradle-api/ --include="*.kt"
 ```
 
 ## Trigger Patterns
@@ -173,7 +175,7 @@ Use this skill when user asks about:
 ## Tips
 
 1. **Start with gradle-api** for public interfaces, then look at `internal/` for implementation
-2. **Use 8.7.0 as reference** - stable, well-documented version
+2. **Use the version you downloaded as reference** - examples above use 8.13.0
 3. **Check internal/tasks/** for task implementations
 4. **Check internal/dsl/** for DSL parsing
 5. **Use glob for faster file finding**: `ls {version}/*/gradle/**/SomeClass.kt`

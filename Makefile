@@ -2,7 +2,7 @@ GRADLE_DOCS_URL ?= https://docs.gradle.org/current/userguide/userguide.html
 DB_PATH ?= cmd/gradle-rag/db/gradle.db
 BINARY_PATH ?= gradle-rag/skills/gradle-rag/references/gradle-rag
 DIST_DIR ?= dist
-PLUGINS := gradle-rag gradle-grill agp-sources gradle-sources kotlin-sources ksp-sources
+PLUGINS := gradle-rag agp-sources gradle-sources kotlin-sources ksp-sources gradle-grill
 PYTHON := $(shell command -v python3.13 || command -v python3.12 || command -v python3.11 || command -v python3 || true)
 ROOT := $(CURDIR)
 

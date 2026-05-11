@@ -1,6 +1,13 @@
 {
   "name": "gradle-grill",
   "description": "Stress-test Gradle/AGP implementation choices against the official documentation.",
+  "dependencies": [
+    "gradle-rag",
+    "agp-sources",
+    "gradle-sources",
+    "kotlin-sources",
+    "ksp-sources"
+  ],
   "author": {
     "name": "materkey"
   },

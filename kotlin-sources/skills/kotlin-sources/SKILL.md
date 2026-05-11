@@ -40,6 +40,8 @@ scripts/wrapper.py update
 scripts/wrapper.py init --ref v2.3.0
 ```
 
+For project-specific investigations, prefer the Kotlin version used by the target project branch. Look for `org.jetbrains.kotlin.*` plugin versions in the target project's build files, settings, or version catalog, then pass a matching Kotlin tag or commit with `--ref`.
+
 ## Repository Structure
 
 Key directories in the Kotlin repository:

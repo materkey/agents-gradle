@@ -31,6 +31,8 @@ scripts/clone_gradle.sh
 
 This clones to `${GRADLE_SOURCES_DIR:-$HOME/.gradle-sources}/gradle`.
 
+For project-specific investigations, prefer the Gradle version used by the target project branch. Check `gradle/wrapper/gradle-wrapper.properties` or the branch's build environment notes, then pass the matching Gradle tag to `scripts/clone_gradle.sh` when you need source-level evidence for that version.
+
 ## Workflow
 
 ### 1. Clone/Update Repository

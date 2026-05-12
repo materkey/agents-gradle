@@ -81,9 +81,27 @@ When working from a local checkout, if `~/.local/bin` is not in `PATH`, use the 
 gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ```
 
+## Quick Start: Install The CLI Binary
+
+The `gradle-rag` and `gradle-grill` plugins call a `gradle-rag` executable at runtime. Marketplace installation only installs the plugins; it does not build or install that binary.
+
+Build the documentation index and install the binary into `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}` first:
+
+```bash
+git clone git@github.com:materkey/agents-gradle.git
+cd agents-gradle
+make build
+scripts/install-gradle-rag-bin.sh
+gradle-rag info
+```
+
+If you already have a compatible binary, put it on `PATH` or set `GRADLE_RAG_BIN` to its absolute path.
+
 ## Quick Start (Claude Code)
 
 ### From The Terminal
+
+After installing the `gradle-rag` binary, install the plugins:
 
 ```bash
 # Add the marketplace from Git so Claude Code can update it.
@@ -129,7 +147,7 @@ jq '.extraKnownMarketplaces["agents-gradle"].autoUpdate=true' ~/.claude/settings
 
 ## Quick Start (Codex)
 
-Codex auto-updates plugins from marketplaces registered as Git sources. Register this repository as a remote marketplace:
+After installing the `gradle-rag` binary, register this repository as a remote marketplace. Codex auto-updates plugins from marketplaces registered as Git sources:
 
 ```bash
 codex plugin marketplace add materkey/agents-gradle@main

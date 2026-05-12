@@ -9,12 +9,12 @@
   "plugins": [
     {
       "name": "gradle-rag",
-      "source": "./gradle-rag",
+      "source": "./plugins/gradle-rag",
       "description": "Search current official Gradle documentation with a local lexical index"
     },
     {
       "name": "gradle-grill",
-      "source": "./gradle-grill",
+      "source": "./plugins/gradle-grill",
       "dependencies": [
         "gradle-rag",
         "agp-sources",
@@ -26,22 +26,22 @@
     },
     {
       "name": "agp-sources",
-      "source": "./agp-sources",
+      "source": "./plugins/agp-sources",
       "description": "Explore Android Gradle Plugin source code from downloaded Google Maven source jars"
     },
     {
       "name": "gradle-sources",
-      "source": "./gradle-sources",
+      "source": "./plugins/gradle-sources",
       "description": "Clone, search, and compare Gradle Build Tool source code"
     },
     {
       "name": "kotlin-sources",
-      "source": "./kotlin-sources",
+      "source": "./plugins/kotlin-sources",
       "description": "Clone, search, read, and compare Kotlin compiler and plugin source code"
     },
     {
       "name": "ksp-sources",
-      "source": "./ksp-sources",
+      "source": "./plugins/ksp-sources",
       "description": "Clone and search Google KSP source code and KSP1/KSP2 implementation details"
     }
   ]

@@ -8,7 +8,7 @@
       "name": "gradle-rag",
       "source": {
         "source": "local",
-        "path": "./gradle-rag"
+        "path": "./plugins/gradle-rag"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -27,7 +27,7 @@
       ],
       "source": {
         "source": "local",
-        "path": "./gradle-grill"
+        "path": "./plugins/gradle-grill"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -39,7 +39,7 @@
       "name": "agp-sources",
       "source": {
         "source": "local",
-        "path": "./agp-sources"
+        "path": "./plugins/agp-sources"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -51,7 +51,7 @@
       "name": "gradle-sources",
       "source": {
         "source": "local",
-        "path": "./gradle-sources"
+        "path": "./plugins/gradle-sources"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -63,7 +63,7 @@
       "name": "kotlin-sources",
       "source": {
         "source": "local",
-        "path": "./kotlin-sources"
+        "path": "./plugins/kotlin-sources"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -75,7 +75,7 @@
       "name": "ksp-sources",
       "source": {
         "source": "local",
-        "path": "./ksp-sources"
+        "path": "./plugins/ksp-sources"
       },
       "policy": {
         "installation": "AVAILABLE",

@@ -1,6 +1,6 @@
 GRADLE_DOCS_URL ?= https://docs.gradle.org/current/userguide/userguide.html
 DB_PATH ?= cmd/gradle-rag/db/gradle.db
-BINARY_PATH ?= gradle-rag/skills/gradle-rag/references/gradle-rag
+BINARY_PATH ?= plugins/gradle-rag/skills/gradle-rag/references/gradle-rag
 DIST_DIR ?= dist
 
 .PHONY: crawl-docs crawl-docs-sample build build-cli install build-db smoke-db build-fast test clean
@@ -15,12 +15,12 @@ build: crawl-docs
 	mkdir -p "$(dir $(BINARY_PATH))"
 	VERSION="v0.$$(date +%Y.%m%d)"; \
 		go build -ldflags "-s -w -X main.version=$$VERSION" -o "$(BINARY_PATH)" ./cmd/gradle-rag
-	chmod +x gradle-rag/skills/gradle-rag/bin/gradle-rag
+	chmod +x plugins/gradle-rag/skills/gradle-rag/bin/gradle-rag
 
 build-cli:
 	mkdir -p "$(dir $(BINARY_PATH))"
 	go build -o "$(BINARY_PATH)" ./cmd/gradle-rag
-	chmod +x gradle-rag/skills/gradle-rag/bin/gradle-rag
+	chmod +x plugins/gradle-rag/skills/gradle-rag/bin/gradle-rag
 
 install: build
 	scripts/install-gradle-rag-bin.sh

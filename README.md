@@ -17,11 +17,11 @@ This is an independent project and is not affiliated with or endorsed by Gradle,
 
 - `cmd/crawler` starts at `https://docs.gradle.org/current/userguide/userguide.html`, follows same-host links under `/current/`, extracts page sections from HTML, and builds a local snapshot at `cmd/gradle-rag/db/gradle.db`.
 - `cmd/gradle-rag` embeds that database into a single binary and performs lexical FTS5 search.
-- `gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups. The skill ships a `bin/gradle-rag` wrapper, and the installer copies the built binary into `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux.
-- `gradle-grill/skills/gradle-grill/SKILL.md` is a pure-text skill — no binary — that orchestrates `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` to challenge implementation variants.
+- `plugins/gradle-rag/skills/gradle-rag/SKILL.md` tells an agent when and how to call the binary for Gradle-specific documentation lookups. The skill ships a `bin/gradle-rag` wrapper, and the installer copies the built binary into `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux.
+- `plugins/gradle-grill/skills/gradle-grill/SKILL.md` is a pure-text skill — no binary — that orchestrates `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` to challenge implementation variants.
 - `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` package the source-lookup skills that Gradle workflows rely on as installable standalone plugins.
 - `gradle-grill` declares plugin dependencies on `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources` in the native plugin manifests and marketplace entries.
-- `*/.claude-plugin/plugin.json` and `*/.codex-plugin/plugin.json` are versionless plugin manifests.
+- `plugins/*/.claude-plugin/plugin.json` and `plugins/*/.codex-plugin/plugin.json` are versionless plugin manifests.
 
 The crawler indexes content pages from the current User Manual, release notes, Groovy DSL, Kotlin DSL, and Java API while skipping generated navigation/search pages that would dilute search results.
 
@@ -38,7 +38,7 @@ The generated documentation index and built binary are intentionally not committ
 # Fast proof that crawling, indexing, and embedding work
 make crawl-docs-sample
 make build-cli
-./gradle-rag/skills/gradle-rag/bin/gradle-rag search "configuration cache" --limit 5
+./plugins/gradle-rag/skills/gradle-rag/bin/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build
 make build
@@ -56,10 +56,10 @@ For project-specific investigations, use the versions from the project branch yo
 These examples show pinned source bootstrap commands:
 
 ```bash
-agp-sources/skills/agp-sources/scripts/fetch_agp_sources.py --version 8.13.0
-gradle-sources/skills/gradle-sources/scripts/clone_gradle.sh v9.3.0
-kotlin-sources/skills/kotlin-sources/scripts/wrapper.py init --ref v2.3.0
-ksp-sources/skills/ksp-sources/scripts/explore.sh init main
+plugins/agp-sources/skills/agp-sources/scripts/fetch_agp_sources.py --version 8.13.0
+plugins/gradle-sources/skills/gradle-sources/scripts/clone_gradle.sh v9.3.0
+plugins/kotlin-sources/skills/kotlin-sources/scripts/wrapper.py init --ref v2.3.0
+plugins/ksp-sources/skills/ksp-sources/scripts/explore.sh init main
 ```
 
 Omitting version arguments uses the script defaults: latest AGP from Google Maven, Gradle `master`, Kotlin `master`, and KSP `main`.
@@ -78,7 +78,7 @@ gradle-rag info
 When working from a local checkout, if `~/.local/bin` is not in `PATH`, use the skill-local wrapper directly. It falls back to the locally built binary under `references/`:
 
 ```bash
-gradle-rag/skills/gradle-rag/bin/gradle-rag info
+plugins/gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ```
 
 ## Quick Start: Install The CLI Binary
@@ -172,7 +172,7 @@ make install
 
 `make install` installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 
-This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`.
+This repository ships versionless local plugin sources under `plugins/`: `gradle-rag`, `gradle-grill`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources`. The plugin manifests intentionally omit `version`.
 
 Claude Code expands native plugin dependencies from the marketplace. For example, installing `gradle-grill` also installs the Gradle docs and source lookup plugins it orchestrates.
 

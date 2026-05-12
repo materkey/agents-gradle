@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE="${ROOT}/gradle-rag/skills/gradle-rag/references/gradle-rag"
+SOURCE="${ROOT}/plugins/gradle-rag/skills/gradle-rag/references/gradle-rag"
 INSTALL_DIR="${GRADLE_RAG_INSTALL_DIR:-${HOME}/.local/bin}"
 TARGET="${INSTALL_DIR}/gradle-rag"
 

@@ -14,7 +14,7 @@ PLUGINS=(
 cd "$ROOT"
 make build
 
-for path in "${HOME}/.claude/skills/gradle" "${HOME}/.codex/skills/gradle" "${HOME}/.claude/skills/gradle-rag" "${HOME}/.codex/skills/gradle-rag"; do
+for path in "${HOME}/.claude/skills/gradle" "${HOME}/.claude/skills/gradle-rag"; do
   if [ -L "$path" ]; then
     rm "$path"
   elif [ -e "$path" ]; then
@@ -22,25 +22,6 @@ for path in "${HOME}/.claude/skills/gradle" "${HOME}/.codex/skills/gradle" "${HO
     exit 1
   fi
 done
-
-config="${HOME}/.codex/config.toml"
-if [ -f "$config" ]; then
-  tmp="${config}.tmp"
-  awk '
-    /^\[plugins\."(gradle-docs|gradle)@agents-gradle"\]/ { skip = 1; next }
-    skip && /^\[/ { skip = 0 }
-    !skip { print }
-  ' "$config" > "$tmp"
-  mv "$tmp" "$config"
-fi
-
-PY="$(command -v python3.13 || command -v python3.12 || command -v python3.11 || command -v python3 || true)"
-if [ -z "$PY" ] || ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)'; then
-  echo "install.sh: need Python 3.9+ on PATH (found: ${PY:-none})" >&2
-  exit 1
-fi
-
-"$PY" "$ROOT/scripts/install-codex-plugins.py" --root "$ROOT" "${PLUGINS[@]}"
 
 claude plugin marketplace add "$ROOT"
 claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true

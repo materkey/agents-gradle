@@ -31,7 +31,6 @@ The generated documentation index and built binary are intentionally not committ
 
 - Go 1.25+
 - `make`
-- Python 3.9+ on `PATH` for the self-contained Codex plugin installer
 
 ## Development
 
@@ -82,15 +81,61 @@ When working from a local checkout, if `~/.local/bin` is not in `PATH`, use the 
 gradle-rag/skills/gradle-rag/bin/gradle-rag info
 ```
 
-## Install For Codex Auto-Updates
+## Quick Start (Claude Code)
 
-Codex auto-updates plugins from marketplaces registered as Git sources. For user installs, register this repository as a remote marketplace and install the plugins from Codex's plugin manager:
+### From The Terminal
+
+```bash
+# Add the marketplace from Git so Claude Code can update it.
+claude plugin marketplace add git@github.com:materkey/agents-gradle.git
+
+# Install the Gradle plugins.
+claude plugin install gradle-rag@agents-gradle
+claude plugin install agp-sources@agents-gradle
+claude plugin install gradle-sources@agents-gradle
+claude plugin install kotlin-sources@agents-gradle
+claude plugin install ksp-sources@agents-gradle
+claude plugin install gradle-grill@agents-gradle
+```
+
+### From Inside Claude Code
+
+The same commands are available as slash commands in a Claude Code session:
+
+```text
+/plugin marketplace add git@github.com:materkey/agents-gradle.git
+/plugin install gradle-rag@agents-gradle
+/plugin install agp-sources@agents-gradle
+/plugin install gradle-sources@agents-gradle
+/plugin install kotlin-sources@agents-gradle
+/plugin install ksp-sources@agents-gradle
+/plugin install gradle-grill@agents-gradle
+```
+
+### Auto-Update
+
+Enable marketplace and plugin auto-update on each Claude Code startup:
+
+1. `/plugins`
+2. **Manage Marketplaces**
+3. `agents-gradle`
+4. **Enable auto-update**
+
+Or as a one-liner:
+
+```bash
+jq '.extraKnownMarketplaces["agents-gradle"].autoUpdate=true' ~/.claude/settings.json >~/.claude/s.tmp && mv ~/.claude/s.tmp ~/.claude/settings.json
+```
+
+## Quick Start (Codex)
+
+Codex auto-updates plugins from marketplaces registered as Git sources. Register this repository as a remote marketplace:
 
 ```bash
 codex plugin marketplace add materkey/agents-gradle@main
 ```
 
-Install `gradle-grill@agents-gradle` for the full workflow, or install the individual source/doc plugins directly. `gradle-grill` depends on `gradle-rag`, `agp-sources`, `gradle-sources`, `kotlin-sources`, and `ksp-sources`.
+Then install these plugin ids from Codex's plugin manager: `gradle-rag@agents-gradle`, `agp-sources@agents-gradle`, `gradle-sources@agents-gradle`, `kotlin-sources@agents-gradle`, `ksp-sources@agents-gradle`, and `gradle-grill@agents-gradle`.
 
 The `gradle-rag` plugin expects the `gradle-rag` binary on `PATH`, or `GRADLE_RAG_BIN` pointing at the binary. The plugin wrapper intentionally resolves the runtime binary from the environment so the plugin itself can come from an auto-updating remote marketplace.
 
@@ -98,18 +143,18 @@ The `gradle-rag` plugin expects the `gradle-rag` binary on `PATH`, or `GRADLE_RA
 
 ```bash
 make build              # crawl full current docs and build the gradle-rag binary
-make install-plugins    # install all local Gradle plugins into Claude and Codex
+make install-plugins    # install local Gradle plugins into Claude Code
 ```
 
-This path is for development and offline local testing. It records the Codex marketplace as `source_type = "local"`, so Codex does not know a remote source for auto-updates.
+This path is for development and offline local testing. It does not install Codex plugins; use the Git marketplace flow above for Codex so auto-updates keep working.
 
 `make install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 
-This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`; Codex installs them as `local`, while Claude Code caches them from the current source revision.
+This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`.
 
-Both Claude Code and the self-contained Codex installer expand native plugin dependencies. For example, installing only `gradle-grill` also installs the Gradle docs and source lookup plugins it orchestrates. `make install-plugins` installs the same set in dependency-first order for both Claude and Codex.
+Claude Code expands native plugin dependencies. For example, installing only `gradle-grill` also installs the Gradle docs and source lookup plugins it orchestrates. `make install-plugins` installs the same set in dependency-first order for Claude Code.
 
-The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle`, `~/.codex/skills/gradle`, `~/.claude/skills/gradle-rag`, and `~/.codex/skills/gradle-rag` so Claude and Codex expose the skills only through the plugins.
+The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle` and `~/.claude/skills/gradle-rag` so Claude Code exposes the skills only through the plugins.
 
 `make install-local` is kept as a compatibility alias for `make install-plugins`.
 

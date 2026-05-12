@@ -36,8 +36,8 @@ The generated documentation index and built binary are intentionally not committ
 
 ```bash
 # Fast proof that crawling, indexing, and embedding work
-make smoke-db
-make build-fast
+make crawl-docs-sample
+make build-cli
 ./gradle-rag/skills/gradle-rag/bin/gradle-rag search "configuration cache" --limit 5
 
 # Full current-docs crawl and binary build

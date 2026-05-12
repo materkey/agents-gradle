@@ -5,24 +5,30 @@ DIST_DIR ?= dist
 PLUGINS := gradle-rag agp-sources gradle-sources kotlin-sources ksp-sources gradle-grill
 ROOT := $(CURDIR)
 
-.PHONY: build-db smoke-db build build-fast test install install-plugins install-local clean
+.PHONY: crawl-docs crawl-docs-sample build build-cli build-db smoke-db build-fast test install install-plugins install-local clean
 
-build-db:
+crawl-docs:
 	go run ./cmd/crawler --start "$(GRADLE_DOCS_URL)" --db "$(DB_PATH)"
 
-smoke-db:
+crawl-docs-sample:
 	go run ./cmd/crawler --start "$(GRADLE_DOCS_URL)" --db "$(DB_PATH)" --max-pages 80 --workers 4
 
-build: build-db
+build: crawl-docs
 	mkdir -p "$(dir $(BINARY_PATH))"
 	VERSION="v0.$$(date +%Y.%m%d)"; \
 		go build -ldflags "-s -w -X main.version=$$VERSION" -o "$(BINARY_PATH)" ./cmd/gradle-rag
 	chmod +x gradle-rag/skills/gradle-rag/bin/gradle-rag
 
-build-fast:
+build-cli:
 	mkdir -p "$(dir $(BINARY_PATH))"
 	go build -o "$(BINARY_PATH)" ./cmd/gradle-rag
 	chmod +x gradle-rag/skills/gradle-rag/bin/gradle-rag
+
+build-db: crawl-docs
+
+smoke-db: crawl-docs-sample
+
+build-fast: build-cli
 
 test:
 	go test ./...
@@ -31,7 +37,7 @@ install-local: install-plugins
 
 install: install-plugins
 
-install-plugins: build-fast
+install-plugins: build-cli
 	@for path in "$$HOME/.claude/skills/gradle" "$$HOME/.claude/skills/gradle-rag"; do \
 		if [ -L "$$path" ]; then \
 			rm "$$path"; \

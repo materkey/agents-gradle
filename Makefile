@@ -2,10 +2,8 @@ GRADLE_DOCS_URL ?= https://docs.gradle.org/current/userguide/userguide.html
 DB_PATH ?= cmd/gradle-rag/db/gradle.db
 BINARY_PATH ?= gradle-rag/skills/gradle-rag/references/gradle-rag
 DIST_DIR ?= dist
-PLUGINS := gradle-rag agp-sources gradle-sources kotlin-sources ksp-sources gradle-grill
-ROOT := $(CURDIR)
 
-.PHONY: crawl-docs crawl-docs-sample build build-cli build-db smoke-db build-fast test install install-plugins install-local clean
+.PHONY: crawl-docs crawl-docs-sample build build-cli install build-db smoke-db build-fast test clean
 
 crawl-docs:
 	go run ./cmd/crawler --start "$(GRADLE_DOCS_URL)" --db "$(DB_PATH)"
@@ -24,6 +22,9 @@ build-cli:
 	go build -o "$(BINARY_PATH)" ./cmd/gradle-rag
 	chmod +x gradle-rag/skills/gradle-rag/bin/gradle-rag
 
+install: build
+	scripts/install-gradle-rag-bin.sh
+
 build-db: crawl-docs
 
 smoke-db: crawl-docs-sample
@@ -32,28 +33,6 @@ build-fast: build-cli
 
 test:
 	go test ./...
-
-install-local: install-plugins
-
-install: install-plugins
-
-install-plugins: build-cli
-	@for path in "$$HOME/.claude/skills/gradle" "$$HOME/.claude/skills/gradle-rag"; do \
-		if [ -L "$$path" ]; then \
-			rm "$$path"; \
-		elif [ -e "$$path" ]; then \
-			echo "Refusing to remove non-symlink legacy skill at $$path" >&2; \
-			exit 1; \
-		fi; \
-	done
-	claude plugin marketplace add "$(ROOT)"
-	claude plugin uninstall gradle-docs@agents-gradle --scope user --keep-data || true
-	claude plugin uninstall gradle@agents-gradle --scope user --keep-data || true
-	@for plugin in $(PLUGINS); do \
-		claude plugin uninstall "$${plugin}@agents-gradle" --scope user --keep-data || true; \
-		claude plugin install "$${plugin}@agents-gradle" --scope user; \
-	done
-	scripts/install-gradle-rag-bin.sh
 
 clean:
 	rm -rf "$(DIST_DIR)"

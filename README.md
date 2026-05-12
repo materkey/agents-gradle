@@ -90,8 +90,7 @@ Build the documentation index and install the binary into `${GRADLE_RAG_INSTALL_
 ```bash
 git clone git@github.com:materkey/agents-gradle.git
 cd agents-gradle
-make build
-scripts/install-gradle-rag-bin.sh
+make install
 gradle-rag info
 ```
 
@@ -157,24 +156,25 @@ Then install these plugin ids from Codex's plugin manager: `gradle-rag@agents-gr
 
 The `gradle-rag` plugin expects the `gradle-rag` binary on `PATH`, or `GRADLE_RAG_BIN` pointing at the binary. The plugin wrapper intentionally resolves the runtime binary from the environment so the plugin itself can come from an auto-updating remote marketplace.
 
-## Install From A Local Checkout
+## Local Development
 
 ```bash
-make build              # crawl full current docs and build the gradle-rag binary
-make install-plugins    # install local Gradle plugins into Claude Code
+make crawl-docs-sample
+make build-cli
+make test
 ```
 
-This path is for development and offline local testing. It does not install Codex plugins; use the Git marketplace flow above for Codex so auto-updates keep working.
+For a full local documentation snapshot and CLI install, run:
 
-`make install-plugins` also installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
+```bash
+make install
+```
+
+`make install` installs the `gradle-rag` command to `${GRADLE_RAG_INSTALL_DIR:-$HOME/.local/bin}/gradle-rag` on Darwin and Linux. If that directory is not in `PATH`, the installer prints the exact zsh/bash or fish command to add it.
 
 This repository ships versionless local plugin sources: `gradle-rag/`, `gradle-grill/`, `agp-sources/`, `gradle-sources/`, `kotlin-sources/`, and `ksp-sources/`. The plugin manifests intentionally omit `version`.
 
-Claude Code expands native plugin dependencies. For example, installing only `gradle-grill` also installs the Gradle docs and source lookup plugins it orchestrates. `make install-plugins` installs the same set in dependency-first order for Claude Code.
-
-The installer removes legacy direct skill symlinks at `~/.claude/skills/gradle` and `~/.claude/skills/gradle-rag` so Claude Code exposes the skills only through the plugins.
-
-`make install-local` is kept as a compatibility alias for `make install-plugins`.
+Claude Code expands native plugin dependencies from the marketplace. For example, installing `gradle-grill` also installs the Gradle docs and source lookup plugins it orchestrates.
 
 ## Evidence Model
 

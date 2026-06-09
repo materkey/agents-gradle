@@ -60,7 +60,38 @@ def run_command(cmd: list[str], cwd: Optional[Path] = None) -> None:
 
 
 def ensure_kotlin_repo(ref: str = DEFAULT_BRANCH, update: bool = False) -> Path:
-    """Clone or update the Kotlin repository."""
+    """Clone or update the Kotlin repository.
+
+    Reuse a pre-existing local clone (e.g. ~/projects/kotlin) instead of cloning
+    a separate copy. The reused clone's working tree is never modified — no
+    fetch/checkout — so unrelated local work there stays intact.
+    """
+    existing = find_kotlin_repo()
+    if (
+        existing is not None
+        and (existing / ".git").exists()
+        and existing.resolve() != DEFAULT_REPO_DIR.resolve()
+    ):
+        print(f"Reusing existing Kotlin clone at {existing}")
+        if ref != DEFAULT_BRANCH or update:
+            current_ref = subprocess.run(
+                ["git", "describe", "--tags", "--always"],
+                cwd=existing, capture_output=True, text=True,
+            ).stdout.strip()
+            if ref != DEFAULT_BRANCH:
+                print(f"Note: requested ref '{ref}', existing clone is at '{current_ref}'.")
+            print(
+                "Leaving the existing clone untouched (no fetch/checkout). "
+                "Set KOTLIN_SOURCES_DIR to a managed dir if you need a specific ref."
+            )
+        current = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=existing, capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        print(f"Kotlin sources ready at: {existing}")
+        print(f"Current commit: {current}")
+        return existing
+
     repo_path = DEFAULT_REPO_DIR
     repo_path.parent.mkdir(parents=True, exist_ok=True)
 

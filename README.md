@@ -16,10 +16,12 @@ Gradle has accumulated several generations of APIs, so the answer an agent remem
 $ gradle-rag search "afterEvaluate plugin author lazy" --limit 1
 ### 1. General Gradle Best Practices — Avoid afterEvaluate
 
-Source: https://docs.gradle.org/current/userguide/best_practices_general.html#avoid_after_evaluate
+Source:
+https://docs.gradle.org/current/userguide/best_practices_general.html#avoid_after_evaluate
 
 Do not use project.>>>afterEvaluate<<< {} to configure tasks, wire properties, or react to
->>>plugin<<< application. Use >>>lazy<<< properties and >>>pluginManager<<<.withPlugin() instead.
+>>>plugin<<< application. Use >>>lazy<<< properties and
+>>>pluginManager<<<.withPlugin() instead.
 ```
 
 **Challenge a build choice.** A `gradle-grill` run at level `medium`, given this question:
@@ -68,7 +70,8 @@ androidComponents.onVariants { variant ->
     val generateTask = tasks.register<GenerateTask>(
         "generateDemo${variant.name.replaceFirstChar(Char::uppercase)}Sources",
     )
-    variant.sources.kotlin?.addGeneratedSourceDirectory(generateTask, GenerateTask::outputDir)
+    variant.sources.kotlin
+        ?.addGeneratedSourceDirectory(generateTask, GenerateTask::outputDir)
 }
 ```
 
@@ -175,7 +178,8 @@ On first use each source plugin clones its repository, so the first AGP question
 ```bash
 gradle-rag search "TaskProvider register" --limit 5
 gradle-rag search "configuration cache requirements" --full
-gradle-rag page "https://docs.gradle.org/current/userguide/configuration_cache_requirements.html"
+gradle-rag page \
+  "https://docs.gradle.org/current/userguide/configuration_cache_requirements.html"
 gradle-rag info
 ```
 

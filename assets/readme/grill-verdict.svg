@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="600" viewBox="0 0 1200 600"
+     role="img" aria-labelledby="verdict-title verdict-desc">
+  <title id="verdict-title">gradle-grill verdict on four ways to wire a generated source directory</title>
+  <desc id="verdict-desc">Run at level medium. Rank 1, onVariants with variant.sources.kotlin.addGeneratedSourceDirectory: Recommended, build successful. Rank 2, withPlugin with sourceSets.named main java.srcDir and a provider: Avoid, build failed. Rank 3, finalizeDsl with sourceSets.getByName main java.srcDir and a provider: Avoid, build failed. Rank 4, the asker's line, afterEvaluate with sourceSets main java.srcDir generateTask.get().outputDir: Avoid, build failed. Ranks 2 to 4 failed on AGP 9.1.0 with: You cannot add Provider instances to the Android SourceSet API.</desc>
+
+  <g id="sheet">
+    <rect x="0.75" y="0.75" width="1198.5" height="598.5" rx="14" fill="#F4EEE2" stroke="#1E1A15" stroke-width="1.5"/>
+  </g>
+
+  <g id="header" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" letter-spacing="1.2" fill="#4F483C">
+    <text x="56" y="62">GRADLE-GRILL, LEVEL MEDIUM</text>
+    <text x="842" y="62">VERDICT</text>
+    <text x="1014" y="62">REAL BUILD</text>
+  </g>
+
+  <!-- Rank 1 is the answer: the only row printed in reverse. -->
+  <g id="rank-1">
+    <rect x="40" y="82" width="1120" height="104" rx="4" fill="#1E1A15"/>
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" x="56" y="154" font-size="60" font-weight="800" fill="#F4EEE2">1</text>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="124" font-size="27" font-weight="700" fill="#F4EEE2">onVariants</text>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="160" font-size="20" fill="#F4EEE2" textLength="648">variant.sources.kotlin?.addGeneratedSourceDirectory(…)</text>
+    <g transform="translate(913 134) rotate(-2)">
+      <rect x="-83" y="-22" width="166" height="44" rx="3" fill="none" stroke="#F4EEE2" stroke-width="2.6"/>
+      <rect x="-77" y="-16" width="154" height="32" rx="1.5" fill="none" stroke="#F4EEE2" stroke-width="2.6"/>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="0" y="7" font-size="20" font-weight="700" text-anchor="middle" fill="#F4EEE2" textLength="132">RECOMMENDED</text>
+    </g>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="1014" y="127" font-size="20" font-weight="700" fill="#F4EEE2">BUILD</text>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="1014" y="153" font-size="20" font-weight="700" fill="#F4EEE2">SUCCESSFUL</text>
+  </g>
+
+  <!-- Double strike, drawn under the code so the glyphs stay whole. -->
+  <g id="double-strike" stroke="#E8590C" stroke-width="2.6" fill="none">
+    <path d="M114 225.5H288M114 231.5H288"/>
+    <path d="M114 261.5H726M114 267.5H726"/>
+    <path d="M114 319.5H304M114 325.5H304"/>
+    <path d="M114 355.5H726M114 361.5H726"/>
+    <path d="M114 413.5H337M114 419.5H337"/>
+    <path d="M114 449.5H846M114 455.5H846"/>
+  </g>
+
+  <g id="rows" fill="#1E1A15">
+    <path d="M56 286H1144M56 380H1144" stroke="#1E1A15" stroke-width="1" fill="none" opacity="0.45"/>
+
+    <g id="rank-2">
+      <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" x="56" y="254" font-size="60" font-weight="800">2</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="236" font-size="27" font-weight="700" textLength="162">withPlugin</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="272" font-size="20" textLength="600">sourceSets.named("main") { java.srcDir(provider) }</text>
+    </g>
+    <g id="rank-3">
+      <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" x="56" y="348" font-size="60" font-weight="800">3</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="330" font-size="27" font-weight="700" textLength="178">finalizeDsl</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="366" font-size="20" textLength="600">sourceSets.getByName("main").java.srcDir(provider)</text>
+    </g>
+    <g id="rank-4">
+      <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" x="56" y="442" font-size="60" font-weight="800">4</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="424" font-size="27" font-weight="700" textLength="211">afterEvaluate</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="352" y="424" font-size="18" font-weight="700" letter-spacing="1.2" fill="#BD4409">YOUR LINE</text>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="120" y="460" font-size="20" textLength="720">sourceSets["main"].java.srcDir(generateTask.get().outputDir)</text>
+    </g>
+  </g>
+
+  <g id="avoid-stamps">
+    <g transform="translate(913 240) rotate(-2)">
+      <rect x="-54" y="-22" width="108" height="44" rx="3" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <rect x="-48" y="-16" width="96" height="32" rx="1.5" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="0" y="7" font-size="20" font-weight="700" text-anchor="middle" fill="#1E1A15" textLength="60">AVOID</text>
+    </g>
+    <g transform="translate(913 334) rotate(-2)">
+      <rect x="-54" y="-22" width="108" height="44" rx="3" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <rect x="-48" y="-16" width="96" height="32" rx="1.5" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="0" y="7" font-size="20" font-weight="700" text-anchor="middle" fill="#1E1A15" textLength="60">AVOID</text>
+    </g>
+    <g transform="translate(913 428) rotate(-2)">
+      <rect x="-54" y="-22" width="108" height="44" rx="3" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <rect x="-48" y="-16" width="96" height="32" rx="1.5" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+      <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="0" y="7" font-size="20" font-weight="700" text-anchor="middle" fill="#1E1A15" textLength="60">AVOID</text>
+    </g>
+  </g>
+
+  <g id="build-results" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="20" font-weight="700" fill="#BD4409">
+    <text x="1014" y="233">BUILD</text><text x="1014" y="259">FAILED</text>
+    <text x="1014" y="327">BUILD</text><text x="1014" y="353">FAILED</text>
+    <text x="1014" y="421">BUILD</text><text x="1014" y="447">FAILED</text>
+  </g>
+
+  <g id="error">
+    <path d="M56 484H1144" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+    <text font-family="Georgia, 'Times New Roman', serif" x="56" y="530" font-size="28" fill="#1E1A15">"You cannot add Provider instances to the Android SourceSet API."</text>
+    <text font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" x="56" y="564" font-size="18" fill="#4F483C">Ranks 2 to 4, real build: AGP 9.1.0, Gradle 9.3.1, :app:compileDebugKotlin</text>
+  </g>
+</svg>

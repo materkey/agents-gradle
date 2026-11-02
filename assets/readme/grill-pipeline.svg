@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="640" viewBox="0 0 1200 640"
+     role="img" aria-labelledby="pipeline-title pipeline-desc">
+  <title id="pipeline-title">How gradle-grill reaches a verdict</title>
+  <desc id="pipeline-desc">A question becomes one concrete decision and a set of variants, and the asker's own approach, if stated, is always one of them. Each variant goes down its own walled lane: an advocate who sees only that variant, then a verifier who sees its claims but never the argument for them. Each claim comes back CONFIRMED, PLAUSIBLE or REFUTED, and the skill tells the orchestrator to keep refuted quotes out of the final evidence. Only the orchestrator ranks, using a principle table, then verified evidence, then laziness. Advocates and verifiers read gradle-rag, agp-sources, gradle-sources, kotlin-sources and ksp-sources.</desc>
+
+  <g id="sheet">
+    <rect x="0.75" y="0.75" width="1198.5" height="638.5" rx="14" fill="#F4EEE2" stroke="#1E1A15" stroke-width="1.5"/>
+  </g>
+
+  <g id="decision">
+    <text x="56" y="62" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="1.2" fill="#1E1A15">QUESTION</text>
+    <g font-family="Georgia, 'Times New Roman', serif" font-size="24" fill="#1E1A15">
+      <text x="56" y="214">One concrete</text>
+      <text x="56" y="246">decision. Your</text>
+      <text x="56" y="278">approach is</text>
+      <text x="56" y="310">always grilled.</text>
+    </g>
+  </g>
+
+  <!-- Fan out to the lanes. -->
+  <g id="fan-out" stroke="#1E1A15" stroke-width="1.5" fill="none">
+    <path d="M226 262L282 152M226 262L282 232M226 262L282 312M226 262L282 392"/>
+  </g>
+
+  <g id="lane-headers">
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="1.2" fill="#1E1A15">
+      <text x="404" y="62">ADVOCATE</text>
+      <text x="652" y="62">VERIFIER</text>
+    </g>
+    <g font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#1E1A15">
+      <text x="404" y="92">Sees one variant.</text>
+      <text x="652" y="92">Sees no argument.</text>
+    </g>
+  </g>
+
+  <!-- The walls between lanes: the same double line as the strike, in ink. -->
+  <g id="walls" stroke="#1E1A15" stroke-width="2.6" fill="none">
+    <path d="M282 189H850M282 195H850"/>
+    <path d="M282 269H850M282 275H850"/>
+    <path d="M282 349H850M282 355H850"/>
+  </g>
+
+  <g id="wall-label">
+    <rect x="510" y="262" width="100" height="20" fill="#F4EEE2"/>
+    <text x="560" y="278" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="1.2" text-anchor="middle" fill="#1E1A15">BLIND</text>
+  </g>
+
+  <g id="lanes" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="20" fill="#1E1A15">
+    <g id="lane-1">
+      <text x="292" y="159">variant</text>
+      <rect x="392" y="128" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="477" y="159" text-anchor="middle">advocate</text>
+      <path d="M562 152H632M624 146L632 152L624 158" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+      <rect x="640" y="128" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="725" y="159" text-anchor="middle">verifier</text>
+    </g>
+    <g id="lane-2">
+      <text x="292" y="239">variant</text>
+      <rect x="392" y="208" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="477" y="239" text-anchor="middle">advocate</text>
+      <path d="M562 232H632M624 226L632 232L624 238" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+      <rect x="640" y="208" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="725" y="239" text-anchor="middle">verifier</text>
+    </g>
+    <g id="lane-3">
+      <text x="292" y="319">variant</text>
+      <rect x="392" y="288" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="477" y="319" text-anchor="middle">advocate</text>
+      <path d="M562 312H632M624 306L632 312L624 318" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+      <rect x="640" y="288" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="725" y="319" text-anchor="middle">verifier</text>
+    </g>
+    <g id="lane-4">
+      <text x="292" y="399">variant</text>
+      <rect x="392" y="368" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="477" y="399" text-anchor="middle">advocate</text>
+      <path d="M562 392H632M624 386L632 392L624 398" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+      <rect x="640" y="368" width="170" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="1.5"/>
+      <text x="725" y="399" text-anchor="middle">verifier</text>
+    </g>
+  </g>
+
+  <!-- Fan in to the orchestrator. -->
+  <g id="fan-in" stroke="#1E1A15" stroke-width="1.5" fill="none">
+    <path d="M810 152H850L886 262M810 232H850L886 262M810 312H850L886 262M810 392H850L886 262"/>
+  </g>
+
+  <g id="orchestrator">
+    <text x="900" y="62" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="1.2" fill="#1E1A15">ORCHESTRATOR</text>
+    <g font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#1E1A15">
+      <text x="900" y="92">The only one that ranks.</text>
+      <text x="900" y="222">Principle table first,</text>
+      <text x="900" y="250">then verified evidence,</text>
+      <text x="900" y="278">then configuration</text>
+      <text x="900" y="306">cache and laziness.</text>
+    </g>
+    <g id="verdict-stamp" transform="translate(986 386) rotate(-3.5)">
+      <rect x="-84" y="-24" width="168" height="48" rx="3" fill="none" stroke="#1E1A15" stroke-width="2.6"/>
+      <rect x="-78" y="-18" width="156" height="36" rx="1.5" fill="none" stroke="#1E1A15" stroke-width="2.6"/>
+      <text x="0" y="8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="24" font-weight="700" text-anchor="middle" fill="#1E1A15" textLength="104">VERDICT</text>
+    </g>
+  </g>
+
+  <!-- What a verifier returns for each claim. Refuted claims get the strike. -->
+  <g id="claim-states">
+    <path d="M768 451.5H858M768 457.5H858" stroke="#E8590C" stroke-width="2.6" fill="none"/>
+    <text x="496" y="462" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#1E1A15">Each claim comes back</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="20" font-weight="700" fill="#1E1A15">
+      <text x="520" y="462" textLength="108">CONFIRMED</text>
+      <text x="644" y="462" textLength="108">PLAUSIBLE</text>
+      <text x="774" y="462" textLength="78">REFUTED</text>
+    </g>
+  </g>
+
+  <!-- The evidence every advocate and verifier reads. -->
+  <g id="evidence">
+    <path d="M56 498H1144" stroke="#1E1A15" stroke-width="1.5" fill="none"/>
+    <text x="56" y="540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" font-weight="700" letter-spacing="1.2" fill="#1E1A15">EVIDENCE</text>
+    <text x="196" y="540" font-family="Georgia, 'Times New Roman', serif" font-size="21" fill="#1E1A15">Advocates and verifiers each read the docs and source themselves.</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="21" fill="#1E1A15">
+      <text x="56" y="586">gradle-rag</text>
+      <text x="238" y="586">agp-sources</text>
+      <text x="435" y="586">gradle-sources</text>
+      <text x="668" y="586">kotlin-sources</text>
+      <text x="901" y="586">ksp-sources</text>
+    </g>
+  </g>
+</svg>

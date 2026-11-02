@@ -1,10 +1,84 @@
-# agents-gradle
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="agents-gradle: Gradle answers your coding agent can cite. A convention plugin line using afterEvaluate is struck through, next to the sentence from Gradle's best practices that rules it out, stamped CONFIRMED by a citation verifier.">
+</p>
 
 **agents-gradle** is a plugin marketplace for Claude Code and Codex. It gives your coding agent a local search over the official Gradle docs, the source of AGP (Android Gradle Plugin), Gradle, Kotlin and KSP (Kotlin Symbol Processing), and `gradle-grill`, a review that makes the agent defend a build choice with citations that a second agent re-checks blind.
 
 Gradle has accumulated several generations of APIs, so the answer an agent remembers is often the obsolete one.
 
 <sub>Independent project, not affiliated with or endorsed by Gradle, Inc.</sub>
+
+## See it work
+
+**Search the docs, offline.** The sentence from the image above, in your terminal:
+
+```console
+$ gradle-rag search "afterEvaluate plugin author lazy" --limit 1
+### 1. General Gradle Best Practices — Avoid afterEvaluate
+
+Source: https://docs.gradle.org/current/userguide/best_practices_general.html#avoid_after_evaluate
+
+Do not use project.>>>afterEvaluate<<< {} to configure tasks, wire properties, or react to
+>>>plugin<<< application. Use >>>lazy<<< properties and >>>pluginManager<<<.withPlugin() instead.
+```
+
+**Challenge a build choice.** A `gradle-grill` run at level `medium`, given this question:
+
+> My convention plugin generates a Kotlin source file with a custom task. I wire the output directory into the Android build with `afterEvaluate { android.sourceSets["main"].java.srcDir(generateTask.get().outputDir) }`. Is this right, or is there a better way?
+
+<p align="center">
+  <img src="./assets/readme/grill-verdict.svg" width="100%" alt="Ranked verdict on four variants. First, onVariants with addGeneratedSourceDirectory: Recommended, build successful. Second, withPlugin with srcDir and a Provider: Avoid, build failed. Third, finalizeDsl with srcDir and a Provider: Avoid, build failed. Fourth, the asker's afterEvaluate line: Avoid, build failed. Second to fourth all fail with the error You cannot add Provider instances to the Android SourceSet API.">
+</p>
+
+`gradle-grill` reads docs and source; it runs no build. The `REAL BUILD` column was added afterwards, by building all four in one test project (AGP 9.1.0, Gradle 9.3.1, `:app:compileDebugKotlin`), and only `onVariants` compiled. Docs and source had already predicted the failures: before any build ran, the advocates for ranks 2 to 4 quoted this exact error from AGP's source as counter-evidence, and the verifiers confirmed it. All three fail on the same call, `srcDir` with a `Provider`, not on the hook: `withPlugin` is what the docs sentence above recommends.
+
+<details>
+<summary><b>Full verdict from this run</b></summary>
+
+<br>
+
+**Decision:** how should a convention plugin wire the output directory of a custom source-generating task into the Android build, so the generated Kotlin source compiles in every build variant? Level `medium`: 4 candidate variants, 1 advocate each, blind citation verify, rank.
+
+**Your variant ranks #4.** It calls `afterEvaluate` in plugin code, which both Gradle's and AGP's guides tell plugin authors not to do, and if `outputDir` is a `DirectoryProperty`, it hands `srcDir` a `Provider`, which AGP 9.1 rejects.
+
+| Rank | Variant | Verdict | CONFIRMED | PLAUSIBLE | REFUTED |
+| --- | --- | --- | ---: | ---: | ---: |
+| 1 | `onVariants` + `addGeneratedSourceDirectory` | Recommended | 37 | 0 | 1 |
+| 2 | `withPlugin` + `srcDir(Provider)` | Avoid | 42 | 3 | 0 |
+| 3 | `finalizeDsl` + `srcDir(Provider)` | Avoid | 37 | 2 | 0 |
+| 4 | `afterEvaluate` + `srcDir(task.get().outputDir)` | Avoid | 44 | 7 | 0 |
+
+Counts cover every claim an advocate made, counter-evidence included, so most citations on ranks 2 to 4 are evidence against that variant. Ranking applies a principle table first, then verified evidence.
+
+**Recommendation.** Register one generator task per build variant inside `onVariants` and hand it to `variant.sources.kotlin?.addGeneratedSourceDirectory`. AGP derives the directory with `flatMap`, which keeps the task lazy and carries its dependency, so the plugin needs no `afterEvaluate` and no `dependsOn`. Caveats the run also verified: `onVariants` callbacks still run inside AGP's own `afterEvaluate`, so this avoids it in name, not in timing; AGP's default output directory is keyed by task name, not by build variant; `variant.sources` covers the main component only, so unit and device tests need their own call.
+
+**Evidence** (verified citations only)
+
+- "Add the output of a custom task to the list of source directories." [`SourceDirectories.kt:42`](https://github.com/jrodbx/agp-sources/blob/1fa1ad1b0753d0a079b9f24fad0187cd95c38772/9.1.0/com.android.tools.build/gradle-api/com/android/build/api/variant/SourceDirectories.kt#L42), AGP 9.1.0
+- "Use the Sources API on androidComponents to register generated sources." [AGP 9.0 release notes](https://developer.android.com/build/releases/agp-9-0-0-release-notes)
+- "Do not use project.afterEvaluate {} to configure tasks, wire properties, or react to plugin application." [General Gradle Best Practices](https://docs.gradle.org/current/userguide/best_practices_general.html#avoid_after_evaluate)
+- "When interacting with AGP, use specially made extension points instead of registering the typical Gradle lifecycle callbacks (such as afterEvaluate()) or setting up explicit Task dependencies." [Write Gradle plugins](https://developer.android.com/build/extend-agp)
+- "Error : You cannot add Provider instances to the Android SourceSet API." [`DefaultAndroidSourceDirectorySet.kt:83`](https://github.com/jrodbx/agp-sources/blob/1fa1ad1b0753d0a079b9f24fad0187cd95c38772/9.1.0/com.android.tools.build/gradle/com/android/build/gradle/internal/api/DefaultAndroidSourceDirectorySet.kt#L83), AGP 9.1.0
+- "Adding Kotlin source directories to AndroidSourceSet.java is also not supported" [Migrate to built-in Kotlin](https://developer.android.com/build/migrate-to-built-in-kotlin)
+
+**Code,** as compiled in the build check. On a repeat run the configuration cache entry was reused and the generator was `UP-TO-DATE`.
+
+```kotlin
+androidComponents.onVariants { variant ->
+    val generateTask = tasks.register<GenerateTask>(
+        "generateDemo${variant.name.replaceFirstChar(Char::uppercase)}Sources",
+    )
+    variant.sources.kotlin?.addGeneratedSourceDirectory(generateTask, GenerateTask::outputDir)
+}
+```
+
+**Considered and rejected**
+
+- `withPlugin` + `srcDir(Provider)`: AGP rejects a `Provider` in the source set DSL by default, and the opt-out goes away in AGP 10. Even with the opt-out (`android.sourceset.disallowProvider=false`), the build check fails for ranks 2 to 4: Kotlin cannot see the generated class (`Unresolved reference 'Generated'`).
+- `finalizeDsl` + `srcDir(Provider)`: AGP's published hook for changing the DSL, but not its documented path for generated sources, and the same rejection.
+- `afterEvaluate` + `srcDir(task.get().outputDir)`: violates the `afterEvaluate` principle, calls `get()` during configuration, and fails the same way. A form that does build in the build check (`.kotlin.srcDir(outputDir.get())` plus `preBuild.dependsOn`) still breaks both guides' rules and uses the deprecated `srcDir`.
+
+</details>
 
 ## What's inside
 
@@ -17,9 +91,13 @@ Gradle has accumulated several generations of APIs, so the answer an agent remem
 | [`kotlin-sources`](plugins/kotlin-sources/skills/kotlin-sources/SKILL.md) | Kotlin compiler, standard library and plugin source | `git`, `python3` |
 | [`ksp-sources`](plugins/ksp-sources/skills/ksp-sources/SKILL.md) | KSP source | `git` |
 
-`gradle-rag` indexes docs.gradle.org only: User Manual, release notes, Groovy DSL, Kotlin DSL and Java API. It does not cover Android's documentation, and no plugin here does: AGP API answers rest on `agp-sources`, plus any developer.android.com page the agent fetches with its own web access. On 2026-11-02 the `agp-sources` mirror held AGP 8.0.0 to 9.1.0 without 8.13.2, and had nothing newer.
+`gradle-rag` indexes docs.gradle.org only: User Manual, release notes, Groovy DSL, Kotlin DSL and Java API. It does not cover Android's documentation, and no plugin here does: AGP API answers rest on `agp-sources`, plus any developer.android.com page the agent fetches with its own web access. The Android citations in the run above came that way, because that run's prompts allowed it; the skill itself does not ask for it. On 2026-11-02 the `agp-sources` mirror held AGP 8.0.0 to 9.1.0 without 8.13.2, and had nothing newer.
 
 ## How `gradle-grill` works
+
+<p align="center">
+  <img src="./assets/readme/grill-pipeline.svg" width="100%" alt="Pipeline: a question becomes one concrete decision and a set of variants. Each variant goes down its own walled lane: an advocate who sees only that variant, then a verifier who sees that variant's sketch and claims but not the argument, and marks each claim CONFIRMED, PLAUSIBLE or REFUTED. Only the orchestrator ranks, and it writes the verdict. Advocates and verifiers read gradle-rag, agp-sources, gradle-sources, kotlin-sources and ksp-sources.">
+</p>
 
 A *variant* here is one candidate approach, not an Android build variant. A single context that invents the variants, gathers their citations and ranks them grades its own homework, so the evidence work goes to separate subagents:
 
@@ -27,7 +105,7 @@ A *variant* here is one candidate approach, not an Android build variant. A sing
 - **Advocate:** one subagent per variant. It gathers quotes for that variant from docs and source, and is told to report any counter-evidence it finds.
 - **Verifier:** one subagent per variant. It gets the claims but not the advocate's argument, and re-reads each source. `CONFIRMED`: the quote is there and means what the advocate says. `PLAUSIBLE`: the quote is there but the reading stretches it, or the docs are silent. `REFUTED`: the quote is not there or is out of context, or the docs say the opposite.
 
-`CONFIRMED` judges the quote, not the variant, and the skill tells the orchestrator to keep `REFUTED` quotes out of its verdict's Evidence section.
+`CONFIRMED` judges the quote, not the variant, and the skill tells the orchestrator to keep `REFUTED` quotes out of its verdict's Evidence section. In the run above, 173 claims came back 160 `CONFIRMED`, 12 `PLAUSIBLE` and 1 `REFUTED`.
 
 | Level | What runs | Subagents |
 | --- | --- | ---: |
@@ -38,7 +116,7 @@ A *variant* here is one candidate approach, not an Android build variant. A sing
 
 With no level given it reuses the last one you typed in the session, otherwise `medium`.
 
-Start with `low` for a quick check; it has no advocates and no verifier. Without a subagent tool the skill runs every role in one context, and the check is no longer blind.
+**What it costs.** In the run above, the skill was called at `medium`, but a workflow script with hand-written prompts drove the advocate and verify phases, with model effort at maximum (a separate setting from the `gradle-grill` level). That took 8 subagents, 173 claims and about 35 minutes. By API usage those 8 agents processed about 23 million tokens: about 20 million cache reads, 2.1 million cache writes and 0.8 million output. A plain `medium` call on Codex, on a simpler `tasks.register` versus `tasks.create` question, used 4 subagents, checked 6 claims and took about 2 minutes. Depth varies that much between runs. Start with `low` for a quick check; it has no advocates and no verifier. Without a subagent tool the skill runs every role in one context, and the check is no longer blind.
 
 ## Install
 

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="460" viewBox="0 0 1200 460"
+     role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">agents-gradle: Gradle answers your coding agent can cite.</title>
+  <desc id="hero-desc">GRADLE + AGP PLUGINS FOR CLAUDE CODE AND CODEX. agents-gradle. Gradle answers your coding agent can cite. A printed code listing marked up by a reviewer: the line afterEvaluate { android.sourceSets["main"].java .srcDir(generateTask.get().outputDir) } is struck through with a double ember line, which leads to the citation that struck it: "Do not use project.afterEvaluate {} to configure tasks, wire properties, or react to plugin application." Source: docs.gradle.org · General Gradle Best Practices. A stamp gives the blind verifier's verdict: CONFIRMED.</desc>
+
+  <!-- Paper. The ink outline keeps the sheet an object on a white page. -->
+  <g id="sheet">
+    <rect x="0.75" y="0.75" width="1198.5" height="458.5" rx="14" fill="#F4EEE2" stroke="#1E1A15" stroke-width="1.5"/>
+  </g>
+
+  <g id="masthead" fill="#1E1A15">
+    <text id="category" x="56" y="62" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="18" letter-spacing="1.2" fill="#4F483C">GRADLE + AGP PLUGINS FOR CLAUDE CODE AND CODEX</text>
+    <text id="name" x="53.5" y="150" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="111" font-weight="800" letter-spacing="-3">agents-gradle</text>
+    <text id="promise" x="56" y="209" font-family="Georgia, 'Times New Roman', serif" font-size="37">Gradle answers your coding agent can cite.</text>
+  </g>
+
+  <!-- Structure: one rule under the masthead, one margin rule. -->
+  <g id="rules" stroke="#1E1A15" fill="none">
+    <path d="M56 229H1144" stroke-width="1.5"/>
+    <path d="M655 229V412" stroke-width="1"/>
+  </g>
+
+  <!-- Double strike, drawn under the code so the glyphs stay whole. Each pair sits 9.5 and 3.5
+       above its row's baseline and hangs 6 past the text at both ends. Row one runs on to the
+       margin rule: it leads to the citation that struck it. -->
+  <g id="double-strike" stroke="#E8590C" stroke-width="2.6" fill="none">
+    <path d="M50 252.5H655M50 258.5H655"/>
+    <path d="M75.2 295.5H477.8M75.2 301.5H477.8"/>
+    <path d="M100.4 338.5H578.6M100.4 344.5H578.6"/>
+    <path d="M50 381.5H74.6M50 387.5H74.6"/>
+  </g>
+
+  <!-- The listing, double spaced on a 43-unit grid, indented 25.2 per level. textLength locks
+       the mono advance (12.6 per character) so the strike ends match the code in every font. -->
+  <g id="listing" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="21" fill="#1E1A15">
+    <text x="56" y="262" textLength="189">afterEvaluate {</text>
+    <text x="81.2" y="305" textLength="390.6">android.sourceSets["main"].java</text>
+    <text x="106.4" y="348" textLength="466.2">.srcDir(generateTask.get().outputDir)</text>
+    <text x="56" y="391" textLength="12.6">}</text>
+  </g>
+
+  <!-- The margin: citation, then its source. The opening mark hangs left of the column.
+       Row one, the source and the stamp word share baselines with the listing. -->
+  <g id="citation" fill="#1E1A15">
+    <g font-family="Georgia, 'Times New Roman', serif" font-size="22">
+      <text x="675" y="262" text-anchor="end">"</text>
+      <text x="675" y="262">Do not use <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="20" fill="#BD4409">project.afterEvaluate {}</tspan></text>
+      <text x="675" y="291">to configure tasks, wire properties,</text>
+      <text x="675" y="320">or react to plugin application."</text>
+    </g>
+    <text id="source" x="675" y="348" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="18" fill="#4F483C">docs.gradle.org · General Gradle Best Practices</text>
+  </g>
+
+  <!-- Stamp: outline in ember, the same two lines and the same gap as the strike. Word in ink. -->
+  <g id="stamp" transform="translate(1039 388) rotate(-3.5)">
+    <rect x="-103" y="-24" width="206" height="48" rx="3" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+    <rect x="-97" y="-18" width="194" height="36" rx="1.5" fill="none" stroke="#E8590C" stroke-width="2.6"/>
+    <text x="-76" y="9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="25" font-weight="700" textLength="152" fill="#1E1A15">CONFIRMED</text>
+  </g>
+</svg>
